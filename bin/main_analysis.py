@@ -221,11 +221,11 @@ if __name__ == '__main__':
     y_test = df_test.label
     
     model_classes = {
-#        'lda':  sklearn.lda.LDA,
-#        'svm': sklearn.svm.SVC,
+        'lda':  sklearn.lda.LDA,
+        'svm': sklearn.svm.SVC,
         'cart': sklearn.tree.DecisionTreeClassifier,
         'logistic regression': sklearn.linear_model.LogisticRegression,
-#        'k-nn': sklearn.neighbors.KNeighborsClassifier,
+        'k-nn': sklearn.neighbors.KNeighborsClassifier,
         }
 
     model_params = {
