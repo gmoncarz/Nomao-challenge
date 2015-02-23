@@ -229,8 +229,8 @@ if __name__ == '__main__':
         }
 
     model_params = {
-        #'cart': [{'max_depth': x} for x in range(2,21)],
-        'cart': [{'max_depth': x} for x in range(2,4)],
+        'cart': [{'max_depth': x} for x in range(2,21)],
+        #'cart': [{'max_depth': x} for x in range(2,4)],
         'svm': [{'gamma': x} for x in (0, .1, .01, .001, .0001, .00001)],
         'k-nn': [{'n_neighbors': x} for x in range(3,21)],
         }
