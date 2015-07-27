@@ -1,3 +1,6 @@
 pandas
 numpy
 tabulate
+matplotlib
+scikit-learn
+scipy
