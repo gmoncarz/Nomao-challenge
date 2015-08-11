@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 
 import pandas as pd
 import numpy as np
@@ -33,7 +33,7 @@ def preprocess_data(df):
     # Remove the 'id' col
     for col in object_cols[1:]:
         df[col] = df[col].astype('category')
- 
+
     # Convert to dummies all 'object' except id
     df = pd.get_dummies(df, columns=object_cols[1:], prefix=object_cols[1:])
 
@@ -42,7 +42,7 @@ def preprocess_data(df):
     column_order.pop( column_order.index('label') )
     column_order.append('label')
     df = df[column_order]
-    
+
     return df
 
 
@@ -54,21 +54,21 @@ def pca_analysis(df):
     pca_cols = df.columns.tolist()[1:-1]
     pca.fit(df[pca_cols])
     end = time.time()
-    
+
     print("PCA analysis finished in %.2f." % (end-start))
     variance_explained_pct = np.cumsum(pca.explained_variance_ratio_)
-    variance_explained_pct_list = [ (x+1, variance_explained_pct[x]) 
-                                     for x 
+    variance_explained_pct_list = [ (x+1, variance_explained_pct[x])
+                                     for x
                                      in range(len(variance_explained_pct))
                                   ]
     variance_explained_table = tabulate.tabulate(variance_explained_pct_list)
-    print("Accumulated variance explained by component:\n%s" % 
+    print("Accumulated variance explained by component:\n%s" %
       variance_explained_table)
 
     transf_not_same = pca.transform(df[df.label==-1][pca_cols])
     transf_same = pca.transform(df[df.label==1][pca_cols])
-  
-    plt.figure()  
+
+    plt.figure()
     plt.scatter( list(map((lambda x: x[0]), transf_not_same)),
                 list(map((lambda x: x[1]), transf_not_same)),
                 c='r',
@@ -114,10 +114,10 @@ def get_train_test_df(df, train_rate):
 
     return (train_rows, test_rows)
 
- 
 
-def get_best_models(model_classes, model_params, 
-                    x_train, x_test, y_train, y_test, 
+
+def get_best_models(model_classes, model_params,
+                    x_train, x_test, y_train, y_test,
                     cv=5, n_jobs=3):
     '''Get the best Lineal Discriminant Moldel'''
 
@@ -133,8 +133,8 @@ def get_best_models(model_classes, model_params,
         print("Starting to evaluate model %s." % model_name)
         class_name = model_classes[model_name]
         params_alternatives = model_params.get(model_name, [{}])
-    
-        # Train the model with all set of parameters to get the best 
+
+        # Train the model with all set of parameters to get the best
         # cross-validated model
         best_acc_std = (0, 1000000)
         best_params = None
@@ -142,24 +142,26 @@ def get_best_models(model_classes, model_params,
         for params in params_alternatives:
             start_train = time.time()
             print("Training model %s with params %s..." % (model_name, str(params)))
-            
+
             model = class_name(**params)    # Instanciate the model
             # train it
             current_scores = sklearn.cross_validation.cross_val_score(
-                model, x_df, y, cv=cv, n_jobs=n_jobs)
+                model, x_df, y, cv=cv, n_jobs=n_jobs, scoring='accuracy',
+                verbose=10, pre_dispatch=None
+            )
             end_train = time.time()
-            
+
             scores_mean = current_scores.mean()
             scores_std = current_scores.std()
-            print(('Model %s with params %s finished in %.2f secs. ' + 
-                  'Accuracy: %0.2f (+/- %0.2f)') % 
-                    (model_name, str(params), end_train-start_train, 
-                     scores_mean, scores_std*2)
+            print(('Model %s with params %s finished in %.2f secs. ' +
+                  'Accuracy: %0.2f (+/- %0.2f)') %
+                    (model_name, str(params), end_train-start_train,
+                     scores_mean*100, scores_std*2)
                  )
 
             # Check if it is the best model
             if (scores_mean > best_acc_std[0]) or \
-               (scores_mean == best_acc_std[0] and 
+               (scores_mean == best_acc_std[0] and
                   scores_std < best_acc_std[1]):
                     best_acc_std = (scores_mean, scores_std)
                     best_params = params
@@ -179,18 +181,20 @@ def get_best_models(model_classes, model_params,
         print("Training final %s model with params %s." %
             (model_name, str(ret[model_name]['params'])))
 
+        class_name = model_classes[model_name]
+        best_params = ret[model_name]['params']
         final_model = class_name(**best_params)
         final_model.fit(x_train, y_train)
         ret[model_name]['model'] = final_model
-        
+
         end_train = time.time()
         print("Final %s model with params %s was done in %.2f secs" %
-              (model_name, str(ret[model_name]['params']), 
+              (model_name, str(ret[model_name]['params']),
                end_train - start_train))
 
     print("Training process finished in %.2f." % (time.time()-start_time))
     return ret
-     
+
 
 def  save_object(filename, obj):
     '''Save an object to a file'''
@@ -199,7 +203,31 @@ def  save_object(filename, obj):
     pickle.dump(obj, fh)
     fh.close()
 
+def read_object(filename):
+    '''Read a pickle object'''
 
+    fh = open(filename, 'rb')
+    data = pickle.load(fh)
+    fh.close()
+
+    return data
+
+
+
+def ensemble_predict(clfs, x):
+
+    predictions = []
+    for clf in clfs:
+        predictions.append(clf.predict(x))
+
+    #for current_pred in zip(*predictions):
+    #    max(current_pred, key=current_pred.count)
+    ret = [max(current_pred, key=current_pred.count)
+           for current_pred
+           in zip(*predictions)
+           ]
+
+    return ret
 
 if __name__ == '__main__':
     df = pd.read_csv('./data/header.csv', header=0, na_values='?')
@@ -213,31 +241,43 @@ if __name__ == '__main__':
     #pca_analysis(df_dummy)
 
     # Get training and testing data structures
-    df_train, df_test = get_train_test_df(df_dummy, 0.7)
+    df_train, df_test = get_train_test_df(df_dummy, 0.8)
     x_cols = df_dummy.columns.tolist()[1:-1]
     x_train = df_train[x_cols]
     x_test = df_test[x_cols]
     y_train = df_train.label
     y_test = df_test.label
-    
+
     model_classes = {
-        'lda':  sklearn.lda.LDA,
-        'svm': sklearn.svm.SVC,
-        'cart': sklearn.tree.DecisionTreeClassifier,
+#        'lda':  sklearn.lda.LDA,
+#        'svm': sklearn.svm.SVC,
+#        'cart': sklearn.tree.DecisionTreeClassifier,
         'logistic regression': sklearn.linear_model.LogisticRegression,
-        'k-nn': sklearn.neighbors.KNeighborsClassifier,
+#        'k-nn': sklearn.neighbors.KNeighborsClassifier,
         }
 
     model_params = {
-        'cart': [{'max_depth': x} for x in range(2,21)],
-        #'cart': [{'max_depth': x} for x in range(2,4)],
-        'svm': [{'gamma': x} for x in (0, .1, .01, .001, .0001, .00001)],
-        'k-nn': [{'n_neighbors': x} for x in range(3,21)],
+        #'cart': [{'max_depth': x} for x in range(2,21)],
+        'cart': [{'max_depth': x} for x in range(5,11)],
+        #'svm': [{'gamma': x} for x in (0, .1, .01, .001, .0001, .00001)],
+        'svm': [{'gamma': x} for x in (0, )],
+        #'k-nn': [{'n_neighbors': x} for x in range(3,21)],
+        'k-nn': [{'n_neighbors': x} for x in range(5,6)],
         }
-                
-    models = get_best_models(model_classes, model_params, 
-                             x_train, x_test, y_train, y_test)
-    
 
-    save_object('./data/models.pickle', models)
-# vim: set expandtab ts=4 sw=4: 
+    models = get_best_models(model_classes, model_params,
+                             x_train, x_test, y_train, y_test, n_jobs=1)
+
+    #save_object('./data/models.pickle', models)
+    #models = read_object('./data/models.pickle')
+
+    #all_models = [ models[x]['model'] for x in models.keys() ]
+    all_models = [ x['model'] for x in models.values() ]
+    ensemble_pred = ensemble_predict(all_models, x_test)
+    ensamble_result = tuple(map(lambda t: t[0]==t[1],
+                                zip(ensemble_pred, y_test)))
+    ensamble_accuracy = ensamble_result.count(True)/len(ensamble_result)
+    print("Ensemble accuracy = %.2f." % (ensamble_accuracy*100))
+
+
+# vim: set expandtab ts=4 sw=4:
