@@ -103,7 +103,7 @@ def pca_analysis(df):
 def get_train_test_df(df, train_rate):
     '''Split a data frame in train and test'''
 
-    rows = df_dummy.index.values
+    rows = df_dummy.index.values.copy()
     np.random.shuffle(rows)
 
     train_rows = rows[:round(len(rows)*train_rate)]
