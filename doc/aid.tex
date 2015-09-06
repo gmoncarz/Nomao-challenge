@@ -1,0 +1,314 @@
+%\documentclass[12pt]{article}
+\documentclass[journal]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usepackage{pgf-pie}
+\usepackage{babel,blindtext}
+\usepackage{color}
+\usepackage[stable]{footmisc}
+\usepackage{supertabular}
+\usepackage{longtable}
+
+
+
+% Custom colors
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{07} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{06}  % for normal
+
+\lstdefinestyle{python_gabo}{
+  breaklines=true,
+	language=Python,
+	basicstyle=\ttm,
+	otherkeywords={self},             % Add keywords here
+	keywordstyle=\ttb\color{deepblue},
+	emph={MyClass,__init__},          % Custom highlighting
+	emphstyle=\ttb\color{deepred},    % Custom highlighting style
+	stringstyle=\color{deepgreen},
+	frame=tb,                         % Any extra options here
+	showstringspaces=false,            % 
+  commentstyle=\ttb,
+}
+
+
+\begin{document}
+
+\title{Trabajo Final de AID}
+\author{Moncarz, Gabriel}
+\maketitle % this produces the title block
+
+
+\begin{abstract}
+TODO.
+bla bla bla.
+bla bla bla.
+\end{abstract}
+
+\begin{IEEEkeywords}
+TODO
+\end{IEEEkeywords}
+
+
+\section{Introducción}
+
+\subsection{Sobre ALRA/Nomao Challenge}
+Nomao Challenge fue una competencia de Data Mining organizada por ALRA 
+(Active Learning in Real-World Applications) y Nomao en el año 2012. Nomao 
+\footnote{www.nomao.com} es un motor de busquedas de lugares, que colecta
+información de lugares de diferentes fuentes (Web, celulares, tables, gps, 
+etc). Esta información es almacenada en una base de datos interna. 
+Cuando se realiza una consulta al motor de busqueda, éste debe retornar una
+respuesta unificada. Una de las complejidades de devolver una
+respuesta unificada, radica en el proceso de deduplicacion de datos. Este
+proceso es el encargado de detectar si la información de 2 fuentes distintas
+son asociadas a un mismo lugar o no. Por ejemplo, la tabla \ref{table:example1}
+muestra los lugares que responden a la consulta "La poste" en francia. El
+proceso de deduplicación debe identificar que el sitio 2 y 3 se refieren
+al mismo lugar, pero el sitio 1 no.
+
+\begin{table}[ht!]
+\caption{Posibles lugares a retornar por una consulta}
+\label{table:example1}
+\centering
+\begin{tabular}{l | l l l }
+ID & Nombre & Direccion & Telefono  \\
+\hline
+1 & La poste & 13 Rue De La Clef 59000 Lille France & 3631 \\ 
+2 & La poste & 13 Rue Nationale 59000 Lille France & 3631 \\
+3 & La poste lille & 13 r. nationale 59000 lille & 0320313131 \\
+\end{tabular}
+\end{table}
+
+Cada lugar provisto por un usuario es almacenada internamente. Se guarda
+información sobre el nombre, dirección, geolocalizacion, página web,
+telefono, fax, etc. Uno de los inconvenientes es que como los datos
+provienen de fuentes distintas o a veces son tipeados manualmente,
+lugares iguales pueden tener información distinta, como también
+distintos lugares pueden tener algunos campos iguales, como por 
+ejemplo el nombre.
+
+El objetivo del desafio Nomao Challenge 2012 es utilizar 
+algoritmos de aprendizaje automático para identificar si 
+distintos items con datos de lugares, se refieren al mismo
+lugar o no, teniendo en cuenta que estas instancias
+pueden provenir de fuentes diferentes.
+
+Las instrucciones oficiales del desafio pueden leerse en 
+\textit{http://fr.nomao.com/labs/challenge}.
+
+\subsection{Sobre los datos provistos por Nomao}
+
+El conjunto de datos provisto por Nomao se encuentra en
+https://archive.ics.uci.edu/ml/datasets/Nomao. 
+
+Nomao no presenta los datos crudos como estan almacenados en la 
+base de datos ni como fueron ingresado por los usario, sino que  
+cada instancia representa una comparación de 
+2 lugares. Los datos originales son transformados y representados
+en 118 variables, de las cuales 89 son continuas y 29 son
+nominales. Ademas se entrega una variable adicional de identificación (id) y
+otra con la clase, que identifica si ambos lugares referencian a un mismo
+destino o no. 
+
+El dataset contiene unas 34.465 instancias con un 28\% de datos faltantes.
+Los datos faltantes se debe a las limitaciones de cada fuente de datos. Por
+ejemplo, cuando se ingresa una dirección manualmente, el usuario no tiene
+capacidad de ingresar la información de GPS.
+
+La tabla \ref{table:data_set} en el apendice \ref{appendix1} detalla todas las variables entregadas por 
+Nomao, como su tipo de datos y sus valores límites.
+
+
+\section{Métodos aplicados}
+
+El objetivo del Challenge es clasificar correctamente si 2 lugares
+referencian al mismo destino. Para lograr lo que básicamente se hace es:
+\begin{itemize}
+\item Análisis, limpieza y pre-procesamiento datos. 
+\item Un análisis de componentes principales para entender mayor el problema. 
+\item Análisis de discriminante lineal de Fisher.
+\item Análisis cuadratico de Fisher.
+\item Análisis de Maquinas de Vector Soporte (Support Vector Machine).
+\item Ensamble con los mejores clasificadores.
+\end{itemize}
+
+Todos el procesamiento y análisis se hizo usando algoritmos en Python 3. Se
+utilizaron como soporte las siguientes librerías:
+\begin{itemize}
+\item Pandas\footnote{http://pandas.pydata.org/}: Para usar la estructura de datos Data Frame
+\item NumPy\footnote{http://www.numpy.org/}: Para operaciones vectoriales
+\item Scikit Learn\footnote{http://scikit-learn.org/}: Implementaciones de Análisis discriminante lineal
+	y cuadrático de Fisher, Maquinas de Vector Soporte y Análisis
+	de componentes principales
+\item Matplotlib: Herramienta de graficación en Python
+\end{itemize}
+
+Todo los códigos fuentes se encuentran en el siguiente repositorio
+\textit{GitHub: https://github.com/gmoncarz/nomao-challenge}
+
+
+
+
+\section{Conclusiones}
+
+bla bla
+
+
+
+\appendices
+
+\section{Especificación de los datos provistos por Nomao}
+\label{appendix1}
+
+\begin{table}[ht!]
+\caption{Descripcion de las 118 variables} 
+\label{table:data_set}
+\centering
+\begin{tabular}{l | l l l}
+Numero & Nombre & Tipo & Rango \\
+       &        &      &                 \\
+\hline
+1	& id  & string &   \\
+2	& clean\_name\_intersect\_min  &   real & 0 .. 1  \\
+3	& clean\_name\_intersect\_max  &   real & 0 .. 1  \\
+4	& clean\_name\_levenshtein\_sim  &   real & 0 .. 1  \\
+5	& clean\_name\_trigram\_sim  &   real & 0 .. 1  \\
+6	& clean\_name\_levenshtein\_term  &   real & 0 .. 1  \\
+7	& clean\_name\_trigram\_term  &   real & 0 .. 1  \\
+8	& clean\_name\_including  &    categorica &  n,s,m  \\
+9	& clean\_name\_equality  &    categorica &  n,s,m  \\
+10	& city\_intersect\_min  &   real & -1 .. 1  \\
+11	& city\_intersect\_max  &   real & -1 .. 1 \\
+12	& city\_levenshtein\_sim  &   real & -1 .. 1  \\
+13	& city\_trigram\_sim  &   real & -1 .. 1  \\
+14	& city\_levenshtein\_term  &   real & -1 .. 1  \\
+15	& city\_trigram\_term  &   real & -1 .. 1  \\
+16	& city\_including  &    categorica &  n,s,m  \\
+17	& city\_equality  &    categorica &  n,s,m  \\
+18	& zip\_intersect\_min  &   real & -1 .. 1  \\
+19	& zip\_intersect\_max  &   real & -1 .. 1  \\
+20	& zip\_levenshtein\_sim  &   real & -1 .. 1  \\
+21	& zip\_trigram\_sim  &   real & -1 .. 1  \\
+22	& zip\_levenshtein\_term  &   real & -1 .. 1  \\
+23	& zip\_trigram\_term  &   real & -1 .. 1  \\
+24	& zip\_including  &    categorica &  n,s,m  \\
+25	& zip\_equality  &    categorica &  n,s,m  \\
+26	& street\_intersect\_min  &   real & -1 .. 1  \\
+27	& street\_intersect\_max  &   real & -1 .. 1  \\
+28	& street\_levenshtein\_sim  &   real & -1 .. 1  \\
+29	& street\_trigram\_sim  &   real & -1 .. 1  \\
+30	& street\_levenshtein\_term  &   real & -1 .. 1  \\
+31	& street\_trigram\_term  &   real & -1 .. 1  \\
+32	& street\_including  &    categorica &  n,s,m  \\
+33	& street\_equality  &    categorica &  n,s,m  \\
+34	& website\_intersect\_min  &   real & -1 .. 1  \\
+35	& website\_intersect\_max  &   real & -1 .. 1  \\
+36	& website\_levenshtein\_sim  &   real & -1 .. 1  \\
+37	& website\_trigram\_sim  &   real & -1 .. 1  \\
+38	& website\_levenshtein\_term  &   real & -1 .. 1  \\
+39	& website\_trigram\_term  &   real & -1 .. 1  \\
+40	& website\_including  &    categorica &  n,s,m  \\
+41	& website\_equality  &    categorica &  n,s,m  \\
+42	& countryname\_intersect\_min  &   real & -1 .. 1  \\
+43	& countryname\_intersect\_max  &   real & -1 .. 1  \\
+44	& countryname\_levenshtein\_sim  &   real & -1 .. 1  \\
+45	& countryname\_trigram\_sim  &   real & -1 .. 1  \\
+46	& countryname\_levenshtein\_term  &   real & -1 .. 1  \\
+47	& countryname\_trigram\_term  &   real & -1 .. 1  \\
+48	& countryname\_including  &    categorica &  n,s,m  \\
+49	& countryname\_equality  &    categorica &  n,s,m  \\
+50	& geocoderlocalityname\_intersect\_min  &   real & -1 .. 1  \\
+51	& geocoderlocalityname\_intersect\_max  &   real & -1 .. 1  \\
+52	& geocoderlocalityname\_levenshtein\_sim  &   real & -1 .. 1  \\
+53	& geocoderlocalityname\_trigram\_sim  &   real & -1 .. 1  \\
+54	& geocoderlocalityname\_levenshtein\_term  &   real & -1 .. 1  \\
+55	& geocoderlocalityname\_trigram\_term  &   real & -1 .. 1  \\
+56	& geocoderlocalityname\_including  &    categorica &  n,s,m  \\
+57	& geocoderlocalityname\_equality  &    categorica &  n,s,m  \\
+58	& geocoderinputaddress\_intersect\_min  &   real & -1 .. 1  \\
+59	& geocoderinputaddress\_intersect\_max  &   real & -1 .. 1  \\
+60	& geocoderinputaddress\_levenshtein\_sim  &   real & -1 .. 1  \\
+61	& geocoderinputaddress\_trigram\_sim  &   real & -1 .. 1  \\
+62	& geocoderinputaddress\_levenshtein\_term  &   real & -1 .. 1  \\
+63	& geocoderinputaddress\_trigram\_term  &   real & -1 .. 1  \\
+64	& geocoderinputaddress\_including  &    categorica &  n,s,m  \\
+65	& geocoderinputaddress\_equality  &    categorica &  n,s,m  \\
+66	& geocoderoutputaddress\_intersect\_min  &   real & -1 .. 1  \\
+67	& geocoderoutputaddress\_intersect\_max  &   real & -1 .. 1  \\
+68	& geocoderoutputaddress\_levenshtein\_sim  &   real & -1 .. 1  \\
+69	& geocoderoutputaddress\_trigram\_sim  &   real & -1 .. 1  \\
+70	& geocoderoutputaddress\_levenshtein\_term  &   real & -1 .. 1  \\
+\end{tabular}
+\end{table}
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l | l l l}
+Numero & Nombre & Tipo & Rango \\
+       &        &      &                 \\
+\hline
+71	& geocoderoutputaddress\_trigram\_term  &   real & -1 .. 1  \\
+72	& geocoderoutputaddress\_including  &    categorica &  n,s,m  \\
+73	& geocoderoutputaddress\_equality  &    categorica &  n,s,m  \\
+74	& geocoderpostalcodenumber\_intersect\_min  &   real & -1 .. 1  \\
+75	& geocoderpostalcodenumber\_intersect\_max  &   real & -1 .. 1  \\
+76	& geocoderpostalcodenumber\_levenshtein\_sim  &   real & -1 .. 1  \\
+77	& geocoderpostalcodenumber\_trigram\_sim  &   real & -1 .. 1  \\
+78	& geocoderpostalcodenumber\_levenshtein\_term  &   real & -1 .. 1  \\
+79	& geocoderpostalcodenumber\_trigram\_term  &   real & -1 .. 1  \\
+80	& geocoderpostalcodenumber\_including  &    categorica &  n,s,m  \\
+81	& geocoderpostalcodenumber\_equality  &    categorica &  n,s,m  \\
+82	& geocodercountrynamecode\_intersect\_min  &   real & -1 .. 1  \\
+83	& geocodercountrynamecode\_intersect\_max  &   real & -1 .. 1  \\
+84	& geocodercountrynamecode\_levenshtein\_sim  &   real & -1 .. 1  \\
+85	& geocodercountrynamecode\_trigram\_sim  &   real & -1 .. 1  \\
+86	& geocodercountrynamecode\_levenshtein\_term  &   real & -1 .. 1  \\
+87	& geocodercountrynamecode\_trigram\_term  &   real & -1 .. 1  \\
+88	& geocodercountrynamecode\_including  &    categorica &  n,s,m  \\
+89	& geocodercountrynamecode\_equality  &    categorica &  n,s,m  \\
+90	& phone\_diff  &   real & -1 .. 1  \\
+91	& phone\_levenshtein  &   real & -1 .. 1  \\
+92	& phone\_trigram  &   real & -1 .. 1  \\
+93	& phone\_equality  &    categorica &  n,s,m  \\
+94	& fax\_diff  &   real & -1 .. 1  \\
+95	& fax\_levenshtein  &   real & -1 .. 1  \\
+96	& fax\_trigram  &   real & -1 .. 1  \\
+97	& fax\_equality  &    categorica &  n,s,m  \\
+98	& street\_number\_diff  &   real & -1 .. 1  \\
+99	& street\_number\_levenshtein  &   real & -1 .. 1  \\
+100	& street\_number\_trigram  &   real & -1 .. 1  \\
+101	& street\_number\_equality  &    categorica &  n,s,m  \\
+102	& geocode\_coordinates\_long\_diff  &   real & -1 .. 1  \\
+103	& geocode\_coordinates\_long\_levenshtein  &   real & -1 .. 1  \\
+104	& geocode\_coordinates\_long\_trigram  &   real & -1 .. 1  \\
+105	& geocode\_coordinates\_long\_equality  &    categorica &  n,s,m  \\
+106	& geocode\_coordinates\_lat\_diff  &   real & -1 .. 1  \\
+107	& geocode\_coordinates\_lat\_levenshtein  &   real & -1 .. 1  \\
+108	& geocode\_coordinates\_lat\_trigram  &   real & -1 .. 1  \\
+109	& geocode\_coordinates\_lat\_equality  &    categorica &  n,s,m  \\
+110	& coordinates\_long\_diff  &   real & -1 .. 1  \\
+111	& coordinates\_long\_levenshtein  &   real & -1 .. 1  \\
+112	& coordinates\_long\_trigram  &   real & -1 .. 1  \\
+113	& coordinates\_long\_equality  &    categorica &  n,s,m  \\
+114	& coordinates\_lat\_diff  &   real & -1 .. 1  \\
+115	& coordinates\_lat\_levenshtein  &   real & -1 .. 1  \\
+116	& coordinates\_lat\_trigram  &   real & -1 .. 1  \\
+117	& coordinates\_lat\_equality  &    categorica &  n,s,m  \\
+118	& geocode\_coordinates\_diff  &   real & -1 .. 1  \\
+119	& coordinates\_diff  &   real & -1 .. 1  \\
+120	& label (clase) & categorica &  1,-1. \\
+\end{tabular}
+\end{table}
+
+
+
+\end{document}
+
