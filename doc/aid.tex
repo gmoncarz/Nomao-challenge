@@ -11,7 +11,7 @@
 \usepackage{color}
 \usepackage[stable]{footmisc}
 \usepackage{supertabular}
-\usepackage{longtable}
+\usepackage{tikz}
 
 
 
@@ -278,8 +278,141 @@ clasificadores corridos previamente:
 
 \section{Resultados}
 
-La tabla \ref{table:resultados} muestra la eficacia en la clasificacion
-y los tiempos de ejecución de cada uno de los algoritmos 
+La tabla \ref{table:pca_results} muestra la varianza acumulada explicada 
+por las primeras 30 componentes principales. La figura \ref{fig:pca_scatterplot}
+muestra el scatterplot de las primeras 3 componentes principales.
+
+\begin{table}[ht!]
+\caption{Varianza explicada acumulada por las primeras 30 componentes principales}
+\label{table:pca_results}
+\centering
+\begin{tabular}{l | l }
+Componente & Var acumulada.  \\
+\hline
+ 1  &  0.31546  \\
+ 2  &  0.457657  \\
+ 3  &  0.578424  \\
+ 4  &  0.653907  \\
+ 5  &  0.708183  \\
+ 6  &  0.757168  \\
+ 7  &  0.797937  \\
+ 8  &  0.832912  \\
+ 9  &  0.859699  \\
+10  &  0.884695  \\
+11  &  0.90015  \\
+12  &  0.913947  \\
+13  &  0.92542  \\
+14  &  0.935086  \\
+15  &  0.942277  \\
+16  &  0.947831  \\
+17  &  0.953028  \\
+18  &  0.95763  \\
+19  &  0.962066  \\
+20  &  0.966069  \\
+21  &  0.969952  \\
+22  &  0.973757  \\
+23  &  0.976644  \\
+24  &  0.979232  \\
+25  &  0.981546  \\
+26  &  0.983753  \\
+27  &  0.985802  \\
+28  &  0.987694  \\
+29  &  0.989397  \\
+30  &  0.99089  \\
+\end{tabular}
+\end{table}
+
+\begin{figure}[!h]
+\label{fig:pca_scatterplot}
+\caption{Scaterplot de las componentes principales}
+\centering
+\includegraphics[width=10cm,keepaspectratio]{pca1_vs_pca2.png}
+\includegraphics[width=10cm,keepaspectratio]{pca1_vs_pca3.png}
+\includegraphics[width=10cm,keepaspectratio]{pca2_vs_pca3.png}
+\end{figure}
+
+
+La tabla \ref{table:main_results} muestra la efectividad en la clasificacion
+y los tiempos de ejecución de cada uno de los algoritmos descriptos en
+la sección de \textit{Materiales}
+
+\begin{table}[!h]
+\caption{Performance de todos los clasificadores}
+\label{table:main_results}
+\centering
+\begin{tabular}{l | l l l | l l}
+Id	&	Clasificador	&	Degree	&	Gamma	&	Tiempo	&	Performance \\
+	&			&		&		&	CrossVal.	&	CrossVal. \\
+\hline
+	1	&	LDA	&		&		&	12	&	\textbf{94.14} \\
+\hline
+	2	&	QDA	&		&		&	15	&	42 \\
+\hline
+	3	&	SVM lineal 	&		&		&	156	&	94.82 \\
+	4	&	SVM rbf  	&		&	1	&	156	&	94.82 \\
+	5	&	SVM rbf  	&		&	0	&	154	&	94.82 \\
+	6	&	SVM rbf  	&		&	 0,1 	&	155	&	94.82 \\
+	7	&	SVM rbf  	&		&	 0,01 	&	155	&	94.82 \\
+	8	&	SVM rbf  	&		&	0,0001	&	155	&	94.82 \\
+	9	&	SVM rbf  	&		&	 0,0001 	&	156	&	94.82 \\
+	10	&	SVM rbf  	&		&	 0,00001 	&	156	&	94.82 \\
+	11	&	SVM polinómico 	&	2	&	1	&	774	&	96.06 \\
+	12	&	SVM polinómico 	&	2	&	0	&	181	&	94.44 \\
+	13	&	SVM polinómico 	&	2	&	 0,1  	&	138	&	96.13 \\
+	14	&	SVM polinómico 	&	2	&	 0,01  	&	168	&	95.11 \\
+	15	&	SVM polinómico 	&	2	&	0,0001	&	404	&	92.44 \\
+	16	&	SVM polinómico 	&	2	&	 0,0001  	&	551	&	71.44 \\
+	17	&	SVM polinómico 	&	2	&	 0,00001  	&	487	&	71.44 \\
+	18	&	SVM polinómico 	&	3	&	1	&	1369	&	94.57 \\
+	19	&	SVM polinómico 	&	3	&	0	&	199	&	94.5 \\
+	20	&	SVM polinómico 	&	3	&	 0,1  	&	196	&	\textbf{96.14} \\
+	21	&	SVM polinómico 	&	3	&	 0,01  	&	157	&	95.35 \\
+	22	&	SVM polinómico 	&	3	&	0,0001	&	524	&	71.44 \\
+	23	&	SVM polinómico 	&	3	&	 0,0001  	&	474	&	71.44 \\
+	24	&	SVM polinómico 	&	3	&	 0,00001  	&	477	&	71.44 \\
+	25	&	SVM polinómico 	&	4	&	1	&	2005	&	93.65 \\
+	26	&	SVM polinómico 	&	4	&	0	&	223	&	94.3 \\
+	27	&	SVM polinómico 	&	4	&	 0,1  	&	333	&	95.49 \\
+	28	&	SVM polinómico 	&	4	&	 0,01  	&	158	&	95.48 \\
+	29	&	SVM polinómico 	&	4	&	0,0001	&	549	&	71.44 \\
+	30	&	SVM polinómico 	&	4	&	 0,0001  	&	476	&	71.44 \\
+	31	&	SVM polinómico 	&	4	&	 0,00001  	&	475	&	71.44 \\
+	32	&	SVM polinómico 	&	5	&	1	&	2251	&	93.42 \\
+	33	&	SVM polinómico 	&	5	&	0	&	252	&	94.05 \\
+	34	&	SVM polinómico 	&	5	&	 0,1  	&	450	&	94.99 \\
+	35	&	SVM polinómico 	&	5	&	 0,01  	&	150	&	95.56 \\
+	36	&	SVM polinómico 	&	5	&	0,0001	&	530	&	71.44 \\
+	37	&	SVM polinómico 	&	5	&	 0,0001  	&	476	&	71.44 \\
+	38	&	SVM polinómico 	&	5	&	 0,00001  	&	473	&	71.44 \\
+	39	&	SVM sigmoide 	&		&	1	&	666	&	60.89 \\
+	40	&	SVM sigmoide 	&		&	0	&	451	&	71.44 \\
+	41	&	SVM sigmoide 	&		&	 0,1 	&	787	&	60.76 \\
+	42	&	SVM sigmoide 	&		&	 0,01 	&	446	&	72.39 \\
+	43	&	SVM sigmoide 	&		&	0,0001	&	270	&	92.92 \\
+	44	&	SVM sigmoide 	&		&	 0,0001 	&	436	&	90.94 \\
+	45	&	SVM sigmoide 	&		&	 0,00001 	&	550	&	71.44 \\
+\hline
+	46	&	K-nn	&	3	&		&	68	&	\textbf{94.99} \\
+	47	&	K-nn	&	4	&		&	68	&	94.61 \\
+	48	&	K-nn	&	5	&		&	71	&	94.81 \\
+	49	&	K-nn	&	6	&		&	70	&	94.58 \\
+	50	&	K-nn	&	7	&		&	73	&	94.63 \\
+	51	&	K-nn	&	8	&		&	74	&	94.5 \\
+	52	&	K-nn	&	9	&		&	72	&	94.66 \\
+	53	&	K-nn	&	10	&		&	74	&	94.53 \\
+	54	&	K-nn	&	11	&		&	75	&	94.48 \\
+	55	&	K-nn	&	12	&		&	76	&	94.28 \\
+	56	&	K-nn	&	13	&		&	73	&	94.22 \\
+	57	&	K-nn	&	14	&		&	76	&	94.1 \\
+	58	&	K-nn	&	15	&		&	78	&	94.04 \\
+	59	&	K-nn	&	16	&		&	74	&	93.9 \\
+	60	&	K-nn	&	17	&		&	74	&	93.97 \\
+	61	&	K-nn	&	18	&		&	78	&	93.83 \\
+	62	&	K-nn	&	19	&		&	79	&	93.86 \\
+	63	&	K-nn	&	20	&		&	75	&	93.78 \\
+\end{tabular}
+\end{table}
+
 
 \section{Discusión}
 
