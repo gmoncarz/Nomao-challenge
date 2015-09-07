@@ -124,7 +124,11 @@ ejemplo, cuando se ingresa una dirección manualmente, el usuario no tiene
 capacidad de ingresar la información de GPS.
 
 La tabla \ref{table:data_set} en el apendice \ref{appendix1} detalla todas las variables entregadas por 
-Nomao, como su tipo de datos y sus valores límites.
+Nomao, como su tipo de datos. Todas las variables reales, van en el rango de 0 a 1. Las variables
+categóricas pueden tener 3 posibles valores: \textit{'n'}, \textit{'s'} 
+o \textit{'m'}. Ni la organización del desafio ni Nomao especifícan 
+el significado de las variable del dataset ni de los valores
+que estas pueden tomar (no se sabe que significa 'n', 's' o 'm').
 
 
 \section{Métodos aplicados}
@@ -154,8 +158,130 @@ utilizaron como soporte las siguientes librerías:
 Todo los códigos fuentes se encuentran en el siguiente repositorio
 \textit{GitHub: https://github.com/gmoncarz/nomao-challenge}
 
+\subsection{Análisis de datos, Limpieza y pre-procesamiento}
+El dataset no presenta outliers. Esto se debe a que todas las variables continuas estan
+en el rango de datos especificados: entre 0 y 1. 
+Esto hace que no sea necesario eliminar ninguna
+instancia de datos.
 
+Las variables categóricas también respetan el standard: no hay ninguna
+de estas variable que contenga un valor no especificado. Estas 
+variable se convirtieron en variables dummies, con el objetivo 
+por aplicar métodos que requieran variables númericas.
 
+Todas las variables continuas, excepto las que comienzan con el
+nombre \textit{clean\_name}, tienen datos faltantes. Como el rango
+de estas variables es de 0 a 1, todas aquellas que tienen datos
+faltantes se las reemplazo por el valor -1. No hay una justificación
+teórica de por que se escoge el valor -1, pero los clasificadores
+respondieron efectivamente a este valor.
+
+\subsection{Análisis de Componentes Principales}
+Se corre un análisis de Componentes principales. Se puede correr sobre
+todas las variables categóricas ya que estas se convirtieron en 
+variables dummies.
+
+\subsection{Cross Validation}
+Los métodos que se corren en las sección seguientes pueden tener overfitting. Para
+tener resultados precisos evitando lo más posible el overfitting, todos los
+métodos que se corren y se detallan en las secciones posteriores se realizan
+aplicando Cross Validation de 5 folders.
+
+\subsection{Análisis Discriminante Lineal}
+Se corre un análisis de discriminante lineal de Fisher. Este proceso no 
+tiene parámetros especiales a configurar.
+
+\subsection{Análisis Discriminante Cuadrático}
+Se corre un análisis de discriminante cuadrático de Fisher. Este proceso
+no tiene variables especiales a configurar.
+
+\subsection{Maquinas de vector soporte}
+Las máquinas de vector soporte pueden discriminar instancias con distintos
+tipos de kernel, dependiendo de la naturaleza de los datos de entradas. Como
+la naturaleza de los datos es desconocido, y parte del desafio es identificarla,
+en este trabajo se realiza un análisis de los 4 kernels más conocidos: lineal,
+polinómico, sigmoide y RBF (Radial Basis Function).
+
+A su vez, la eficacia en la clasificación de cada kernel depende de los
+parámetros en que el clasificador es entrenado. Estos son valores empíricos
+que dependen exclusivamente de cada problema en particular. Es por eso
+que corren varios entrenamientos con distintos kernels y distintos parámetros.
+La table \ref{table:svm_config} especifica todas las variaciones de maquinas 
+de vector soporte corridas.
+
+\begin{table}[ht!]
+\caption{Distintas configuraciones de SVM ejecutadas}
+\label{table:svm_config}
+\centering
+\begin{tabular}{l | l l l }
+Número & Kernel & Gamma & Degree  \\
+\hline
+1 & lineal &  &  \\ 
+2 & rbf  & 1  &  \\ 
+3 & rbf  & 0 &  \\ 
+4 & rbf  & 0,1 &  \\ 
+5 & rbf  & 0,01 &  \\ 
+6 & rbf  & 0,001 &  \\ 
+7 & rbf  & 0,0001 &  \\ 
+8 & rbf  & 0,00001 &  \\ 
+9 & polinómico & 1  & 2 \\ 
+10 & polinómico & 0  & 2 \\ 
+11 & polinómico & 0,1  & 2 \\ 
+12 & polinómico & 0,01  & 2 \\ 
+13 & polinómico & 0,001  & 2 \\ 
+14 & polinómico & 0,0001  & 2 \\ 
+15 & polinómico & 0,00001  & 2 \\ 
+16 & polinómico & 1  & 3 \\ 
+17 & polinómico & 0  & 3 \\ 
+18 & polinómico & 0,1  & 3 \\ 
+19 & polinómico & 0,01  & 3 \\ 
+20 & polinómico & 0,001  & 3 \\ 
+21 & polinómico & 0,0001  & 3 \\ 
+22 & polinómico & 0,00001  & 3 \\ 
+23 & polinómico & 1  & 4 \\ 
+24 & polinómico & 0  & 4 \\ 
+25 & polinómico & 0,1  & 4 \\ 
+26 & polinómico & 0,01  & 4 \\ 
+27 & polinómico & 0,001  & 4 \\ 
+28 & polinómico & 0,0001  & 4 \\ 
+29 & polinómico & 0,00001  & 4 \\ 
+30 & polinómico & 1  & 5 \\ 
+31 & polinómico & 0  & 5 \\ 
+32 & polinómico & 0,1  & 5 \\ 
+33 & polinómico & 0,01  & 5 \\ 
+34 & polinómico & 0,001  & 5 \\ 
+35 & polinómico & 0,0001  & 5 \\ 
+36 & polinómico & 0,00001  & 5 \\ 
+37 & sigmoide & 1 &  \\ 
+38 & sigmoide & 0 &  \\ 
+39 & sigmoide & 0,1 &  \\ 
+40 & sigmoide & 0,01 &  \\ 
+41 & sigmoide & 0,001 &  \\ 
+42 & sigmoide & 0,0001 &  \\ 
+43 & sigmoide & 0,00001 &  \\ 
+\end{tabular}
+\end{table}
+
+\subsection{K-Vecinos mas cercanos}
+Se realiza 18 iteraciones de K-Vecinos mas cercanos, iterando entre k=3
+a k=20. Se utiliza la distancia de Minkowski.
+
+\subsection{Ensamble}
+Este método realiza un ensamble por votación de los siguientes 3
+clasificadores corridos previamente:
+
+\begin{itemize}
+\item Discriminante lineal de Fisher
+\item Máquina de vector soporte polinómica de grado 3 y gamma=0,1. 
+\item K Vecinos mas cercanos con K=3
+\end{itemize}
+
+\section{Resultados}
+
+La tabla \ref{table:resultados} muestra la eficacia en la clasificacion
+y los tiempos de ejecución de cada uno de los algoritmos 
+
+\section{Discusión}
 
 \section{Conclusiones}
 
@@ -167,85 +293,88 @@ bla bla
 
 \section{Especificación de los datos provistos por Nomao}
 \label{appendix1}
+Todas las variables categóricas pueden tener 3 valores posibles:
+\textit{'n'}, \textit{'s'} o \textit{'m'}.
+Todas las variables continuas son reales con valores entre 
+0 y 1. Las variables continuas pueden tener valores faltantes.
 
 \begin{table}[ht!]
 \caption{Descripcion de las 118 variables} 
 \label{table:data_set}
-\centering
-\begin{tabular}{l | l l l}
-Numero & Nombre & Tipo & Rango \\
-       &        &      &                 \\
+\begin{tabular}{l | l l }
+Numero & Nombre & Tipo \\
+       &        &      \\
 \hline
-1	& id  & string &   \\
-2	& clean\_name\_intersect\_min  &   real & 0 .. 1  \\
-3	& clean\_name\_intersect\_max  &   real & 0 .. 1  \\
-4	& clean\_name\_levenshtein\_sim  &   real & 0 .. 1  \\
-5	& clean\_name\_trigram\_sim  &   real & 0 .. 1  \\
-6	& clean\_name\_levenshtein\_term  &   real & 0 .. 1  \\
-7	& clean\_name\_trigram\_term  &   real & 0 .. 1  \\
-8	& clean\_name\_including  &    categorica &  n,s,m  \\
-9	& clean\_name\_equality  &    categorica &  n,s,m  \\
-10	& city\_intersect\_min  &   real & -1 .. 1  \\
-11	& city\_intersect\_max  &   real & -1 .. 1 \\
-12	& city\_levenshtein\_sim  &   real & -1 .. 1  \\
-13	& city\_trigram\_sim  &   real & -1 .. 1  \\
-14	& city\_levenshtein\_term  &   real & -1 .. 1  \\
-15	& city\_trigram\_term  &   real & -1 .. 1  \\
-16	& city\_including  &    categorica &  n,s,m  \\
-17	& city\_equality  &    categorica &  n,s,m  \\
-18	& zip\_intersect\_min  &   real & -1 .. 1  \\
-19	& zip\_intersect\_max  &   real & -1 .. 1  \\
-20	& zip\_levenshtein\_sim  &   real & -1 .. 1  \\
-21	& zip\_trigram\_sim  &   real & -1 .. 1  \\
-22	& zip\_levenshtein\_term  &   real & -1 .. 1  \\
-23	& zip\_trigram\_term  &   real & -1 .. 1  \\
-24	& zip\_including  &    categorica &  n,s,m  \\
-25	& zip\_equality  &    categorica &  n,s,m  \\
-26	& street\_intersect\_min  &   real & -1 .. 1  \\
-27	& street\_intersect\_max  &   real & -1 .. 1  \\
-28	& street\_levenshtein\_sim  &   real & -1 .. 1  \\
-29	& street\_trigram\_sim  &   real & -1 .. 1  \\
-30	& street\_levenshtein\_term  &   real & -1 .. 1  \\
-31	& street\_trigram\_term  &   real & -1 .. 1  \\
-32	& street\_including  &    categorica &  n,s,m  \\
-33	& street\_equality  &    categorica &  n,s,m  \\
-34	& website\_intersect\_min  &   real & -1 .. 1  \\
-35	& website\_intersect\_max  &   real & -1 .. 1  \\
-36	& website\_levenshtein\_sim  &   real & -1 .. 1  \\
-37	& website\_trigram\_sim  &   real & -1 .. 1  \\
-38	& website\_levenshtein\_term  &   real & -1 .. 1  \\
-39	& website\_trigram\_term  &   real & -1 .. 1  \\
-40	& website\_including  &    categorica &  n,s,m  \\
-41	& website\_equality  &    categorica &  n,s,m  \\
-42	& countryname\_intersect\_min  &   real & -1 .. 1  \\
-43	& countryname\_intersect\_max  &   real & -1 .. 1  \\
-44	& countryname\_levenshtein\_sim  &   real & -1 .. 1  \\
-45	& countryname\_trigram\_sim  &   real & -1 .. 1  \\
-46	& countryname\_levenshtein\_term  &   real & -1 .. 1  \\
-47	& countryname\_trigram\_term  &   real & -1 .. 1  \\
-48	& countryname\_including  &    categorica &  n,s,m  \\
-49	& countryname\_equality  &    categorica &  n,s,m  \\
-50	& geocoderlocalityname\_intersect\_min  &   real & -1 .. 1  \\
-51	& geocoderlocalityname\_intersect\_max  &   real & -1 .. 1  \\
-52	& geocoderlocalityname\_levenshtein\_sim  &   real & -1 .. 1  \\
-53	& geocoderlocalityname\_trigram\_sim  &   real & -1 .. 1  \\
-54	& geocoderlocalityname\_levenshtein\_term  &   real & -1 .. 1  \\
-55	& geocoderlocalityname\_trigram\_term  &   real & -1 .. 1  \\
-56	& geocoderlocalityname\_including  &    categorica &  n,s,m  \\
-57	& geocoderlocalityname\_equality  &    categorica &  n,s,m  \\
-58	& geocoderinputaddress\_intersect\_min  &   real & -1 .. 1  \\
-59	& geocoderinputaddress\_intersect\_max  &   real & -1 .. 1  \\
-60	& geocoderinputaddress\_levenshtein\_sim  &   real & -1 .. 1  \\
-61	& geocoderinputaddress\_trigram\_sim  &   real & -1 .. 1  \\
-62	& geocoderinputaddress\_levenshtein\_term  &   real & -1 .. 1  \\
-63	& geocoderinputaddress\_trigram\_term  &   real & -1 .. 1  \\
-64	& geocoderinputaddress\_including  &    categorica &  n,s,m  \\
-65	& geocoderinputaddress\_equality  &    categorica &  n,s,m  \\
-66	& geocoderoutputaddress\_intersect\_min  &   real & -1 .. 1  \\
-67	& geocoderoutputaddress\_intersect\_max  &   real & -1 .. 1  \\
-68	& geocoderoutputaddress\_levenshtein\_sim  &   real & -1 .. 1  \\
-69	& geocoderoutputaddress\_trigram\_sim  &   real & -1 .. 1  \\
-70	& geocoderoutputaddress\_levenshtein\_term  &   real & -1 .. 1  \\
+1	& id  & string  \\
+2	& clean\_name\_intersect\_min  &   real  \\
+3	& clean\_name\_intersect\_max  &   real  \\
+4	& clean\_name\_levenshtein\_sim  &   real  \\
+5	& clean\_name\_trigram\_sim  &   real  \\
+6	& clean\_name\_levenshtein\_term  &   real  \\
+7	& clean\_name\_trigram\_term  &   real  \\
+8	& clean\_name\_including  &    categorica   \\
+9	& clean\_name\_equality  &    categorica   \\
+10	& city\_intersect\_min  &   real  \\
+11	& city\_intersect\_max  &   real \\
+12	& city\_levenshtein\_sim  &   real  \\
+13	& city\_trigram\_sim  &   real  \\
+14	& city\_levenshtein\_term  &   real  \\
+15	& city\_trigram\_term  &   real  \\
+16	& city\_including  &    categorica   \\
+17	& city\_equality  &    categorica   \\
+18	& zip\_intersect\_min  &   real  \\
+19	& zip\_intersect\_max  &   real  \\
+20	& zip\_levenshtein\_sim  &   real  \\
+21	& zip\_trigram\_sim  &   real  \\
+22	& zip\_levenshtein\_term  &   real  \\
+23	& zip\_trigram\_term  &   real  \\
+24	& zip\_including  &    categorica   \\
+25	& zip\_equality  &    categorica   \\
+26	& street\_intersect\_min  &   real  \\
+27	& street\_intersect\_max  &   real  \\
+28	& street\_levenshtein\_sim  &   real  \\
+29	& street\_trigram\_sim  &   real  \\
+30	& street\_levenshtein\_term  &   real  \\
+31	& street\_trigram\_term  &   real  \\
+32	& street\_including  &    categorica   \\
+33	& street\_equality  &    categorica   \\
+34	& website\_intersect\_min  &   real  \\
+35	& website\_intersect\_max  &   real  \\
+36	& website\_levenshtein\_sim  &   real  \\
+37	& website\_trigram\_sim  &   real  \\
+38	& website\_levenshtein\_term  &   real  \\
+39	& website\_trigram\_term  &   real  \\
+40	& website\_including  &    categorica   \\
+41	& website\_equality  &    categorica   \\
+42	& countryname\_intersect\_min  &   real  \\
+43	& countryname\_intersect\_max  &   real  \\
+44	& countryname\_levenshtein\_sim  &   real  \\
+45	& countryname\_trigram\_sim  &   real  \\
+46	& countryname\_levenshtein\_term  &   real  \\
+47	& countryname\_trigram\_term  &   real  \\
+48	& countryname\_including  &    categorica   \\
+49	& countryname\_equality  &    categorica   \\
+50	& geocoderlocalityname\_intersect\_min  &   real  \\
+51	& geocoderlocalityname\_intersect\_max  &   real  \\
+52	& geocoderlocalityname\_levenshtein\_sim  &   real  \\
+53	& geocoderlocalityname\_trigram\_sim  &   real  \\
+54	& geocoderlocalityname\_levenshtein\_term  &   real  \\
+55	& geocoderlocalityname\_trigram\_term  &   real  \\
+56	& geocoderlocalityname\_including  &    categorica   \\
+57	& geocoderlocalityname\_equality  &    categorica   \\
+58	& geocoderinputaddress\_intersect\_min  &   real  \\
+59	& geocoderinputaddress\_intersect\_max  &   real  \\
+60	& geocoderinputaddress\_levenshtein\_sim  &   real  \\
+61	& geocoderinputaddress\_trigram\_sim  &   real  \\
+62	& geocoderinputaddress\_levenshtein\_term  &   real  \\
+63	& geocoderinputaddress\_trigram\_term  &   real  \\
+64	& geocoderinputaddress\_including  &    categorica   \\
+65	& geocoderinputaddress\_equality  &    categorica   \\
+66	& geocoderoutputaddress\_intersect\_min  &   real  \\
+67	& geocoderoutputaddress\_intersect\_max  &   real  \\
+68	& geocoderoutputaddress\_levenshtein\_sim  &   real  \\
+69	& geocoderoutputaddress\_trigram\_sim  &   real  \\
+70	& geocoderoutputaddress\_levenshtein\_term  &   real  \\
 \end{tabular}
 \end{table}
 
@@ -255,56 +384,56 @@ Numero & Nombre & Tipo & Rango \\
 Numero & Nombre & Tipo & Rango \\
        &        &      &                 \\
 \hline
-71	& geocoderoutputaddress\_trigram\_term  &   real & -1 .. 1  \\
-72	& geocoderoutputaddress\_including  &    categorica &  n,s,m  \\
-73	& geocoderoutputaddress\_equality  &    categorica &  n,s,m  \\
-74	& geocoderpostalcodenumber\_intersect\_min  &   real & -1 .. 1  \\
-75	& geocoderpostalcodenumber\_intersect\_max  &   real & -1 .. 1  \\
-76	& geocoderpostalcodenumber\_levenshtein\_sim  &   real & -1 .. 1  \\
-77	& geocoderpostalcodenumber\_trigram\_sim  &   real & -1 .. 1  \\
-78	& geocoderpostalcodenumber\_levenshtein\_term  &   real & -1 .. 1  \\
-79	& geocoderpostalcodenumber\_trigram\_term  &   real & -1 .. 1  \\
-80	& geocoderpostalcodenumber\_including  &    categorica &  n,s,m  \\
-81	& geocoderpostalcodenumber\_equality  &    categorica &  n,s,m  \\
-82	& geocodercountrynamecode\_intersect\_min  &   real & -1 .. 1  \\
-83	& geocodercountrynamecode\_intersect\_max  &   real & -1 .. 1  \\
-84	& geocodercountrynamecode\_levenshtein\_sim  &   real & -1 .. 1  \\
-85	& geocodercountrynamecode\_trigram\_sim  &   real & -1 .. 1  \\
-86	& geocodercountrynamecode\_levenshtein\_term  &   real & -1 .. 1  \\
-87	& geocodercountrynamecode\_trigram\_term  &   real & -1 .. 1  \\
-88	& geocodercountrynamecode\_including  &    categorica &  n,s,m  \\
-89	& geocodercountrynamecode\_equality  &    categorica &  n,s,m  \\
-90	& phone\_diff  &   real & -1 .. 1  \\
-91	& phone\_levenshtein  &   real & -1 .. 1  \\
-92	& phone\_trigram  &   real & -1 .. 1  \\
-93	& phone\_equality  &    categorica &  n,s,m  \\
-94	& fax\_diff  &   real & -1 .. 1  \\
-95	& fax\_levenshtein  &   real & -1 .. 1  \\
-96	& fax\_trigram  &   real & -1 .. 1  \\
-97	& fax\_equality  &    categorica &  n,s,m  \\
-98	& street\_number\_diff  &   real & -1 .. 1  \\
-99	& street\_number\_levenshtein  &   real & -1 .. 1  \\
-100	& street\_number\_trigram  &   real & -1 .. 1  \\
-101	& street\_number\_equality  &    categorica &  n,s,m  \\
-102	& geocode\_coordinates\_long\_diff  &   real & -1 .. 1  \\
-103	& geocode\_coordinates\_long\_levenshtein  &   real & -1 .. 1  \\
-104	& geocode\_coordinates\_long\_trigram  &   real & -1 .. 1  \\
-105	& geocode\_coordinates\_long\_equality  &    categorica &  n,s,m  \\
-106	& geocode\_coordinates\_lat\_diff  &   real & -1 .. 1  \\
-107	& geocode\_coordinates\_lat\_levenshtein  &   real & -1 .. 1  \\
-108	& geocode\_coordinates\_lat\_trigram  &   real & -1 .. 1  \\
-109	& geocode\_coordinates\_lat\_equality  &    categorica &  n,s,m  \\
-110	& coordinates\_long\_diff  &   real & -1 .. 1  \\
-111	& coordinates\_long\_levenshtein  &   real & -1 .. 1  \\
-112	& coordinates\_long\_trigram  &   real & -1 .. 1  \\
-113	& coordinates\_long\_equality  &    categorica &  n,s,m  \\
-114	& coordinates\_lat\_diff  &   real & -1 .. 1  \\
-115	& coordinates\_lat\_levenshtein  &   real & -1 .. 1  \\
-116	& coordinates\_lat\_trigram  &   real & -1 .. 1  \\
-117	& coordinates\_lat\_equality  &    categorica &  n,s,m  \\
-118	& geocode\_coordinates\_diff  &   real & -1 .. 1  \\
-119	& coordinates\_diff  &   real & -1 .. 1  \\
-120	& label (clase) & categorica &  1,-1. \\
+71	& geocoderoutputaddress\_trigram\_term  &   real  \\
+72	& geocoderoutputaddress\_including  &    categorica   \\
+73	& geocoderoutputaddress\_equality  &    categorica   \\
+74	& geocoderpostalcodenumber\_intersect\_min  &   real  \\
+75	& geocoderpostalcodenumber\_intersect\_max  &   real  \\
+76	& geocoderpostalcodenumber\_levenshtein\_sim  &   real  \\
+77	& geocoderpostalcodenumber\_trigram\_sim  &   real  \\
+78	& geocoderpostalcodenumber\_levenshtein\_term  &   real  \\
+79	& geocoderpostalcodenumber\_trigram\_term  &   real  \\
+80	& geocoderpostalcodenumber\_including  &    categorica   \\
+81	& geocoderpostalcodenumber\_equality  &    categorica   \\
+82	& geocodercountrynamecode\_intersect\_min  &   real  \\
+83	& geocodercountrynamecode\_intersect\_max  &   real  \\
+84	& geocodercountrynamecode\_levenshtein\_sim  &   real  \\
+85	& geocodercountrynamecode\_trigram\_sim  &   real  \\
+86	& geocodercountrynamecode\_levenshtein\_term  &   real  \\
+87	& geocodercountrynamecode\_trigram\_term  &   real  \\
+88	& geocodercountrynamecode\_including  &    categorica   \\
+89	& geocodercountrynamecode\_equality  &    categorica   \\
+90	& phone\_diff  &   real  \\
+91	& phone\_levenshtein  &   real  \\
+92	& phone\_trigram  &   real  \\
+93	& phone\_equality  &    categorica   \\
+94	& fax\_diff  &   real  \\
+95	& fax\_levenshtein  &   real  \\
+96	& fax\_trigram  &   real  \\
+97	& fax\_equality  &    categorica   \\
+98	& street\_number\_diff  &   real  \\
+99	& street\_number\_levenshtein  &   real  \\
+100	& street\_number\_trigram  &   real  \\
+101	& street\_number\_equality  &    categorica   \\
+102	& geocode\_coordinates\_long\_diff  &   real  \\
+103	& geocode\_coordinates\_long\_levenshtein  &   real  \\
+104	& geocode\_coordinates\_long\_trigram  &   real  \\
+105	& geocode\_coordinates\_long\_equality  &    categorica   \\
+106	& geocode\_coordinates\_lat\_diff  &   real  \\
+107	& geocode\_coordinates\_lat\_levenshtein  &   real  \\
+108	& geocode\_coordinates\_lat\_trigram  &   real  \\
+109	& geocode\_coordinates\_lat\_equality  &    categorica   \\
+110	& coordinates\_long\_diff  &   real  \\
+111	& coordinates\_long\_levenshtein  &   real  \\
+112	& coordinates\_long\_trigram  &   real  \\
+113	& coordinates\_long\_equality  &    categorica   \\
+114	& coordinates\_lat\_diff  &   real  \\
+115	& coordinates\_lat\_levenshtein  &   real  \\
+116	& coordinates\_lat\_trigram  &   real  \\
+117	& coordinates\_lat\_equality  &    categorica   \\
+118	& geocode\_coordinates\_diff  &   real  \\
+119	& coordinates\_diff  &   real  \\
+120	& label (clase) & categorica (1 o 0). \\
 \end{tabular}
 \end{table}
 
