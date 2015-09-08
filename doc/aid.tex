@@ -51,13 +51,13 @@
 
 
 \begin{abstract}
-Nomao es un motor de busqueda de lugares, donde la gente utiliza diferentes medios
-de comunicación (celulares, tablets, computadoras portatiles, etc), 
+Nomao es un motor de búsqueda de lugares, donde la gente utiliza diferentes medios
+de comunicación (celulares, tablets, computadoras portátiles, etc), 
 para guardar información de distintos destinos (restaurants, hoteles,
 bares, etc). Cada medio tiene sus peculiaridades y muchas veces el mismo lugar
 es almacenado con datos distintos, similares o equivalentes (por ejemplo, ``av.'' o
 ``avenida'' o ``Avenue''), como también con errores o datos faltantes. 
-El Desafio Nomao consiste en identificar si los datos pertenecientes
+El Desafío Nomao consiste en identificar si los datos pertenecientes
 a 2 destinos geográficos se refieren al mismo lugar o no. El presente
 trabajo hace un análisis de distintos clasificadores, para terminar
 proponiendo un ensamble con una capacidad predictiva superior al 97\%.
@@ -74,10 +74,10 @@ K-vecinos mas cercanos
 \subsection{Sobre ALRA/Nomao Challenge}
 Nomao Challenge fue una competencia de Data Mining organizada por ALRA 
 (Active Learning in Real-World Applications) y Nomao en el año 2012. Nomao 
-\footnote{www.nomao.com} es un motor de busquedas de lugares, que colecta
+\footnote{www.nomao.com} es un motor de búsquedas de lugares, que colecta
 información de lugares de diferentes fuentes (Web, celulares, tables, gps, 
 etc). Esta información es almacenada en una base de datos interna. 
-Cuando se realiza una consulta al motor de busqueda, éste debe retornar una
+Cuando se realiza una consulta al motor de búsqueda, éste debe retornar una
 respuesta unificada. Una de las complejidades de devolver una
 respuesta unificada, radica en el proceso de deduplicacion de datos. Este
 proceso es el encargado de detectar si la información de 2 fuentes distintas
@@ -91,7 +91,7 @@ al mismo lugar, pero el sitio 1 no.
 \label{table:example1}
 \centering
 \begin{tabular}{l | l l l }
-ID & Nombre & Direccion & Telefono  \\
+ID & Nombre & Dirección & Teléfono  \\
 \hline
 1 & La poste & 13 Rue De La Clef 59000 Lille France & 3631 \\ 
 2 & La poste & 13 Rue Nationale 59000 Lille France & 3631 \\
@@ -101,19 +101,19 @@ ID & Nombre & Direccion & Telefono  \\
 
 Cada lugar provisto por un usuario es almacenada internamente. Se guarda
 información sobre el nombre, dirección, geolocalizacion, página web,
-telefono, fax, etc. Uno de los inconvenientes es que como los datos
+teléfono, fax, etc. Uno de los inconvenientes es que como los datos
 provienen de fuentes distintas o a veces son tipeados manualmente,
 lugares iguales pueden tener información distinta, como también
 distintos lugares pueden tener algunos campos iguales, como por 
 ejemplo el nombre.
 
-El objetivo del desafio Nomao Challenge 2012 es utilizar 
+El objetivo del desafío Nomao Challenge 2012 es utilizar 
 algoritmos de aprendizaje automático para identificar si 
 distintos items con datos de lugares, se refieren al mismo
 lugar o no, teniendo en cuenta que estas instancias
 pueden provenir de fuentes diferentes.
 
-Las instrucciones oficiales del desafio pueden leerse en 
+Las instrucciones oficiales del desafío pueden leerse en 
 \textit{http://fr.nomao.com/labs/challenge}.
 
 \subsection{Sobre los datos provistos por Nomao}
@@ -122,11 +122,11 @@ El conjunto de datos provisto por Nomao se encuentra en
 \textit{https://archive.ics.uci.edu/ml/datasets/Nomao}. 
 
 Nomao no presenta los datos crudos como estan almacenados en la 
-base de datos ni como fueron ingresado por los usario, sino que  
+base de datos ni como fueron ingresado por los usuario, sino que  
 cada instancia representa una comparación de 
 2 lugares. Los datos originales son transformados y representados
 en 118 variables, de las cuales 89 son continuas y 29 son
-nominales. Ademas se entrega una variable adicional de identificación (id) y
+nominales. Además se entrega una variable adicional de identificación (id) y
 otra con la clase, que identifica si ambos lugares referencian a un mismo
 destino o no. 
 
@@ -135,11 +135,11 @@ Los datos faltantes se debe a las limitaciones de cada fuente de datos. Por
 ejemplo, cuando se ingresa una dirección manualmente, el usuario no tiene
 capacidad de ingresar la información de GPS.
 
-La tabla \ref{table:data_set} en el apendice \ref{appendix1} detalla todas las variables entregadas por 
+La tabla \ref{table:data_set} en el apéndice \ref{appendix1} detalla todas las variables entregadas por 
 Nomao, como su tipo de datos. Todas las variables reales estan comprendidas
 en el rango de 0 a 1. Las variables
 categóricas pueden tener 3 posibles valores: \textit{'n'}, \textit{'s'} 
-o \textit{'m'}. Ni la organización del desafio ni Nomao especifícan 
+o \textit{'m'}. Ni la organización del desafío ni Nomao especifican 
 el significado de las variable del dataset ni de los valores
 que estas pueden tomar (no se sabe que significa 'n', 's' o 'm').
 
@@ -152,12 +152,12 @@ referencian al mismo destino. Para cumplir esto lo que básicamente se hace es:
 \item Análisis, limpieza y pre-procesamiento datos. 
 \item Un análisis de componentes principales para entender mayor el problema. 
 \item Análisis de discriminante lineal de Fisher (LDA).
-\item Análisis cuadratico de Fisher (QDA).
+\item Análisis cuadrático de Fisher (QDA).
 \item Análisis de Maquinas de Vector Soporte (Support Vector Machine - SVM).
 \item Ensamble con los mejores clasificadores.
 \end{itemize}
 
-Todo el procesamiento y análisis se hizo usando algoritmos propioes en Python 3. Se
+Todo el procesamiento y análisis se hizo usando algoritmos propios en Python 3. Se
 utilizaron como soporte las siguientes librerías:
 \begin{itemize}
 \item Pandas\footnote{http://pandas.pydata.org/}: Para usar la estructura de datos Data Frame.
@@ -180,7 +180,7 @@ instancia de datos.
 Las variables categóricas también respetan el standard: no hay ninguna
 de estas variable que contenga un valor no especificado. Estas 
 variable se convirtieron en variables dummies, con el objetivo 
-por aplicar métodos que requieran variables númericas.
+por aplicar métodos que requieran variables numéricas.
 
 Todas las variables continuas, excepto las que comienzan con el
 nombre \textit{clean\_name}, tienen datos faltantes. Como el rango
@@ -289,7 +289,7 @@ clasificadores corridos previamente:
 \item K Vecinos mas cercanos con K=3
 \end{itemize}
 
-A diferencia de los metodos previos, este método no se aplica
+A diferencia de los métodos previos, este método no se aplica
 Cross Validation, sino que se separa un 80\% aleatorio del dataset para 
 entrenamiento, se entrenan los 3 modelos con este conjunto, y luego
 se verifica la performance del ensamble con el 20\% restante.
@@ -350,7 +350,7 @@ Componente & Var acumulada.  \\
 \end{figure}
 
 
-La tabla \ref{table:main_results} muestra la efectividad en la clasificacion
+La tabla \ref{table:main_results} muestra la efectividad en la clasificación
 y los tiempos de ejecución de cada uno de los algoritmos descriptos en
 la sección de \textit{Materiales}
 
@@ -442,8 +442,8 @@ de la varianza puede ser explicada con 17 componentes de las 118 variables
 totales del dataset. Con 30 componentes principales, se puede explicar
 el 99\% de la varianza.
 
-Los graficos de la figura \ref{fig:pca_scatterplot} muestran 3 scratterplot de
-las 3 primeras componentes principales. Los graficos de la componente principal 1 
+Los gráficos de la figura \ref{fig:pca_scatterplot} muestran 3 scratterplot de
+las 3 primeras componentes principales. Los gráficos de la componente principal 1 
 contra la componente 2 y 3, muestran que no se pueden identificar las clases, ya
 que ambas estan distribuidas por todo el gráfico. En el gráfico de la
 componente principal 2 y la 3 ya se puede ver que las clases que apuntan
@@ -476,7 +476,7 @@ el 94,14\% de las instancias. Es curioso que el clasificador cuadrático tiene
 una performace 42,00\%, por debajo del clasificador lineal y más aún, por debajo
 del azar. 
 
-Dado estos resultados, se opta por seleccional el clasificar lineal de Fisher
+Dado estos resultados, se opta por seleccionar el clasificar lineal de Fisher
 para ser usado en el ensamble.
 
 \subsection{Máquinas de vector soporte}
@@ -487,9 +487,9 @@ demandan muchas operaciones de CPU, y además hay que encontrar
 los parámetros empíricos que mejor se ajustan a los datos.  
 Se intenta escoger el mejor modelo de maquinas de vector soporte. Se
 decide probar con 4 kernels distintos y combinar parámetros sobre
-cáda uno de ellos, para escoger finalmente un modelo para formar parte
+cada uno de ellos, para escoger finalmente un modelo para formar parte
 del ensamble definitivo. Se prueban 4 kerners: lineal, RBF, polinómico y
-sigmoide. El modelo lineal, el más estandard de todos y usado como referencia,
+sigmoide. El modelo lineal, el más estándar de todos y usado como referencia,
 puede clasificar correctamente el 94.82\% de los datos. El modelo RBF, para
 sorpresa del autor, tiene exactamente el mismo desempeño que el lineal, 
 en cualquier de sus variantes. Por este motivo se descarta este modelo,
@@ -498,7 +498,7 @@ ya que es uno más complejo sin valor agregado.
 Respecto al kernel polinómico se prueba con grado 2, 3, 4 y 5. A cada
 uno de ellos se los corre con varios valores de $\gamma$ (entre 1 y $10^{-5}$) . Los modelos
 con buen desempeño tienen una performance que oscilan entre el 92 y
-96\%. Para todos los grados el mejor $\gamma$ es de 0.1, excepto para el polinómio
+96\%. Para todos los grados el mejor $\gamma$ es de 0.1, excepto para el polinómico
 de grado 5, cuyo mejor $\gamma$ es de 0.01. 
 
 Si se considera el mejor $\gamma$ de cada kernel polinómico, todos los modelos tienen un
@@ -506,26 +506,26 @@ desempeño de entre el 95\% y 96\%.
 
 Respecto a los tiempos de ejecución, estos crecen sensiblemente a medida que el $\gamma$ 
 disminuye. Esto se debe a que mientras menor es el $\gamma$, mayor es la precisión que 
-se le exige al modelo y mas calculos aritméticos hay que realizar para encontrar
+se le exige al modelo y mas cálculos aritméticos hay que realizar para encontrar
 el polinomio discriminante. 
 
 Respecto al kernel sigmoide, solo se obtiene buenos resultados con $\gamma$ iguales
 a 0.001 y 0.0001. Para los distintos $\gamma$, la performance era del orden del
 70\%.
 
-Tras evaluar los 43 modelos distintos de máquians de vector soporte, se escoge
+Tras evaluar los 43 modelos distintos de maquinas de vector soporte, se escoge
 la de kernel polinómico de grado 3 y $\gamma=0.1$ porque tiene una performance del
 96.14\%, siendo esta la mejor de todas.
 
 \subsection{K vecinos mas cercanos}
 Se realizan corridas de K vecinos más cercanos, iterando con K desde
 3 a 20 y distancia de Minkowski. En todos los casos se clasificaron
-correctamente entre el 93\% y 95\% de las instacias. Los tiempos de corrida aumentaron
+correctamente entre el 93\% y 95\% de las instancias. Los tiempos de corrida aumentaron
 a medida que K aumentaba, pero siempre estos tiempos son sensiblemente
 mas bajos que los de máquinas de vector soporte.
 
 Lo curioso de este clasificador es que para este problema puntual, a medida
-que aumenta el K, dispinuye la capacidad de predicción. De cualquier modo,
+que aumenta el K, disminuye la capacidad de predicción. De cualquier modo,
 se debe tener en cuenta que esta diferencia no es mayor a 1.20\%.
 
 Se escoge el clasificador con K=3 para ser usado en el ensemble final,
@@ -562,13 +562,13 @@ de entrenamiento.
 Se ha intentado mejorar la performance usando mas clasificadores de
 máquinas vector soporte o K vecinos mas cercanos, obteniendo los
 mismos resultados. Es por esto que se escoge usar el ensemble
-mas simple como clasificador del desafio planteado.
+mas simple como clasificador del desafío planteado.
 
 
 \section{Conclusiones}
 Se ha logrado construir un ensemble de clasificadores capaz de identificar
 con un 97.78\% si 2 registros de ubicaciones pertenecen al mismo destino o no,
-usando los datos transformados y provistos por el motor de busqueda de Nomao.
+usando los datos transformados y provistos por el motor de búsqueda de Nomao.
 
 
 
@@ -582,7 +582,7 @@ Todas las variables continuas son reales con valores entre
 0 y 1. Las variables continuas pueden tener valores faltantes.
 
 \begin{table}[ht!]
-\caption{Descripcion de las 118 variables} 
+\caption{Descripción de las 118 variables} 
 \label{table:data_set}
 \begin{tabular}{l | l l }
 Numero & Nombre & Tipo \\
