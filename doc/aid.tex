@@ -12,6 +12,7 @@
 \usepackage[stable]{footmisc}
 \usepackage{supertabular}
 \usepackage{tikz}
+\usepackage{amsmath}
 
 
 
@@ -41,19 +42,30 @@
 
 \begin{document}
 
-\title{Trabajo Final de AID}
+\title{  Nomao Challenge \\
+	{\large Trabajo Final de AID} \\
+	{\large Gabo}
+} 
 \author{Moncarz, Gabriel}
 \maketitle % this produces the title block
 
 
 \begin{abstract}
-TODO.
-bla bla bla.
-bla bla bla.
+Nomao es un motor de busqueda de lugares, donde la gente utiliza diferentes medios
+de comunicación (celulares, tablets, computadoras portatiles, etc), 
+para guardar información de distintos destinos (restaurants, hoteles,
+bares, etc). Cada medio tiene sus peculiaridades y muchas veces el mismo lugar
+es almacenado con datos distintos, similares o equivalentes (por ejemplo, ``av.'' o
+``avenida'' o ``Avenue''), como también con errores o datos faltantes. 
+El Desafio Nomao consiste en identificar si los datos pertenecientes
+a 2 destinos geográficos se refieren al mismo lugar o no. El presente
+trabajo hace un análisis de distintos clasificadores, para terminar
+proponiendo un ensamble con una capacidad predictiva superior al 97\%.
 \end{abstract}
 
 \begin{IEEEkeywords}
-TODO
+clasificación ensemble discriminante lineal Fisher maquina de vector soporte
+K-vecinos mas cercanos
 \end{IEEEkeywords}
 
 
@@ -214,7 +226,7 @@ de vector soporte corridas.
 \label{table:svm_config}
 \centering
 \begin{tabular}{l | l l l }
-Número & Kernel & Gamma & Degree  \\
+Número & Kernel & $\gamma$ & Degree  \\
 \hline
 1 & lineal &  &  \\ 
 2 & rbf  & 1  &  \\ 
@@ -272,9 +284,14 @@ clasificadores corridos previamente:
 
 \begin{itemize}
 \item Discriminante lineal de Fisher
-\item Máquina de vector soporte polinómica de grado 3 y gamma=0,1. 
+\item Máquina de vector soporte polinómica de grado 3 y $\gamma=0.1$. 
 \item K Vecinos mas cercanos con K=3
 \end{itemize}
+
+A diferencia de los metodos previos, este método no se aplica
+Cross Validation, sino que se separa un 80\% aleatorio del dataset para 
+entrenamiento, se entrenan los 3 modelos con este conjunto, y luego
+se verifica la performance del ensamble con el 20\% restante.
 
 \section{Resultados}
 
@@ -283,8 +300,8 @@ por las primeras 30 componentes principales. La figura \ref{fig:pca_scatterplot}
 muestra el scatterplot de las primeras 3 componentes principales.
 
 \begin{table}[ht!]
-\caption{Varianza explicada acumulada por las primeras 30 componentes principales}
 \label{table:pca_results}
+\caption{Varianza explicada acumulada por las primeras 30 componentes principales}
 \centering
 \begin{tabular}{l | l }
 Componente & Var acumulada.  \\
@@ -305,7 +322,7 @@ Componente & Var acumulada.  \\
 14  &  0.935086  \\
 15  &  0.942277  \\
 16  &  0.947831  \\
-17  &  0.953028  \\
+\textbf{17}  &  \textbf{0.953028}  \\
 18  &  0.95763  \\
 19  &  0.962066  \\
 20  &  0.966069  \\
@@ -318,11 +335,11 @@ Componente & Var acumulada.  \\
 27  &  0.985802  \\
 28  &  0.987694  \\
 29  &  0.989397  \\
-30  &  0.99089  \\
+\textbf{30}  &  \textbf{0.99089}  \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \label{fig:pca_scatterplot}
 \caption{Scaterplot de las componentes principales}
 \centering
@@ -336,17 +353,19 @@ La tabla \ref{table:main_results} muestra la efectividad en la clasificacion
 y los tiempos de ejecución de cada uno de los algoritmos descriptos en
 la sección de \textit{Materiales}
 
-\begin{table}[!h]
-\caption{Performance de todos los clasificadores}
+El ensamble tiene una performance del 97.77\%.
+
+\begin{table}[!hb]
+\caption{Performance crossvalidada de todos los clasificadores}
 \label{table:main_results}
 \centering
 \begin{tabular}{l | l l l | l l}
-Id	&	Clasificador	&	Degree	&	Gamma	&	Tiempo	&	Performance \\
+Id	&	Clasificador	&	Degree	&    $\gamma$	&	Tiempo	&	Performance \\
 	&			&		&		&	CrossVal.	&	CrossVal. \\
 \hline
 	1	&	LDA	&		&		&	12	&	\textbf{94.14} \\
 \hline
-	2	&	QDA	&		&		&	15	&	42 \\
+	2	&	QDA	&		&		&	15	&	42.00 \\
 \hline
 	3	&	SVM lineal 	&		&		&	156	&	94.82 \\
 	4	&	SVM rbf  	&		&	1	&	156	&	94.82 \\
@@ -388,7 +407,7 @@ Id	&	Clasificador	&	Degree	&	Gamma	&	Tiempo	&	Performance \\
 	40	&	SVM sigmoide 	&		&	0	&	451	&	71.44 \\
 	41	&	SVM sigmoide 	&		&	 0,1 	&	787	&	60.76 \\
 	42	&	SVM sigmoide 	&		&	 0,01 	&	446	&	72.39 \\
-	43	&	SVM sigmoide 	&		&	0,0001	&	270	&	92.92 \\
+	43	&	SVM sigmoide 	&		&	0,001	&	270	&	92.92 \\
 	44	&	SVM sigmoide 	&		&	 0,0001 	&	436	&	90.94 \\
 	45	&	SVM sigmoide 	&		&	 0,00001 	&	550	&	71.44 \\
 \hline
@@ -415,10 +434,140 @@ Id	&	Clasificador	&	Degree	&	Gamma	&	Tiempo	&	Performance \\
 
 
 \section{Discusión}
+\subsection{Análisis de Componentes Principales}
+La tabla \ref{table:pca_results} muestra la varianza acumulada de las
+primeras 30 componentes principales. La tabla muestra que el 95\%
+de la varianza puede ser explicada con 17 componentes de las 118 variables
+totales del dataset. Con 30 componentes principales, se puede explicar
+el 99\% de la varianza.
+
+Los graficos de la figura \ref{fig:pca_scatterplot} muestran 3 scratterplot de
+las 3 primeras componentes principales. Los graficos de la componente principal 1 
+contra la componente 2 y 3, muestran que no se puede identificar la clases, ya
+que ambas estan distribuidas por todo el gráfico. En el gráfico de la
+componente principal 2 y la 3 ya se puede ver que las clases que apuntan
+a \textit{"distintos destinos"}, se encuentran más agrupadas que en las componentes
+previas. Sin embargo, pese al mayor poder de agrupamiento, estan muy juntas a
+las instancias de la clase contraria, haciendo imposible una clara identificación por
+componentes principales.
+
+\subsection{Métodos de clasificación}
+El objetivo que se persigue en este trabajo es encontrar varios clasificadores
+de diferentes tipos, que tengan una buen desempeño encontrando las clases:
+instancias que apuntan al mismo lugar y las que no. El objetivo final es apalancar
+el desempeño de estos clasificadores individuales haciendo un ensamble
+de los mejores de estos. 
+
+Para esto se prueba distintos tipos de clasificadores con distintos parámetros.
+Se prueba con discriminantes lineal de Fisher, discriminante cuadrático,
+máquinas de vector soporte y K vecinos mas cercanos. Se intenta en primera 
+instancia encontrar el mejor clasificador de cada tipo. Luego, se verifica si
+haciendo un ensamble de los mejores, la performance general es aún mejor.
+
+Se aclara que todas las mediciones de performance en esta
+sección son aplicando cross-validation, a excepción de que se mencione lo
+contrario.
+
+\subsubsection{Análisis discriminante lineal y cuadrático de Fisher}
+El análisis de discriminantes lineal y cuadrático son los únicos de los probados
+que no requieren una combinación de parámetros para escoger el mejor. El
+clasificador por discriminantes de Fisher lineal pudo diferenciar correctamente
+el 94,14\% de las instancias. Es curioso que el clasificador cuadrático tiene
+una performace 42,00\%, por debajo del clasificador lineal y más aún, por debajo
+del azar. 
+
+Dado estos resultados, se opta por seleccional el clasificar lineal de Fisher
+para ser usado en el ensamble.
+
+\subsection{Máquinas de vector soporte}
+Las máquinas de vector soporte son buenas clasificadoras, permiten
+clasificar datos no lineales, en algunos casos tienen muy buena perforance,
+pero como contrapartida, son costosas de entrenar: consumen mucha  memoria y
+demandan muchas operaciones de CPU, y además hay que encontrar
+los parámetros empíricos que mejor se ajustan a los datos.  
+Se intenta escoger el mejor modelo de Maquinas de vector soporte. Se
+decide probar con 4 kernels distintos y combinar parámetros sobre
+cáda uno de ellos, para escoger finalmente un modelo para formar parte
+del ensamble definitivo. Se prueban 4 kerners: lineal, RBF, polinómico y
+sigmoide. El modelo lineal, el más estandard de todos y usado como referencia,
+puede clasificar correctamente el 94.82\% de los datos. El modelo RBF, para
+sorpresa del autor, tiene exactamente el mismo desempeño que el lineal, 
+en cualquier de sus variantes. Por este motivo se descarta este modelo,
+ya que es uno más complejo sin valor agregado. 
+
+Respecto al kernel polinómico se prueba con grado 2, 3, 4 y 5. A cada
+uno de ellos se los corre con varios valores de $\gamma$ (entre 1 y $10^{-5}$) . Los modelos
+con buen desempeño tienen una performance que oscilan entre el 92 y
+96\%. Para todos los grados el mejor $\gamma$ es de 0.1, excepto para el polinómio
+de grado 5, cuyo mejor $\gamma$ es de 0.01. 
+
+Si se considera el mejor $\gamma$ de cada kernel polinómico, todos los modelos tienen un
+desempeño de entre el 95\% y 96\%.
+
+Respecto a los tiempos de ejecución, estos crecen sensiblemente a medida que el $\gamma$ 
+disminuye. Esto se debe a que mientras menor es el $\gamma$, mayor es la precisión que 
+se le exige al modelo y mas calculos aritméticos hay que realizar para encontrar
+el polinomio discriminante. 
+
+Respecto al kernel sigmoide, solo se obtiene buenos resultados con $\gamma$ iguales
+a 0.001 y 0.0001. Para los distintos $\gamma$, la performance era del orden del
+70\%.
+
+Tras evaluar todos 43 modelos distintos de máquians de vector soporte, se escoge
+la de kernel polinómico de grado 3 y $\gamma=0.1$ porque tiene una performance del
+96.14\%, siendo esta la mejor de todas.
+
+\subsection{K vecinos mas cercanos}
+Se realizan corridas de K vecinos más cercanos, iterando con K desde
+3 a 20 y distancia de Minkowski. En todos los casos se clasificaron
+correctamente entre el 93\% y 95\%. Los tiempos de corrida aumentaron
+a medida que K aumentaba, pero siempre estos tiempos son sensiblemente
+mas bajos que los de máquinas de vector soporte.
+
+Lo curioso de este clasificador es que para este problema puntual, a medida
+que aumenta el K, dispinuye la capacidad de predicción. De cualquier modo,
+se debe tener en cuenta que esta diferencia no es mayor a 1.20\%.
+
+Se escoge el clasificador con K=3 para ser usado en el ensemble final,
+porque su performance del 94.99\% es la mayor de esta especie.
+
+\subsection{Ensemble}
+La tabla \ref{table:ensemble_summary} resume los 3 clasificadores usados 
+como base para el ensamble. El ensamble construido es por votos, lo que
+significa que la clase seleccionada es la escogida por 2 de los
+3 clasificadores.
+
+\begin{table}[ht!]
+\caption{Clasificadores individuales y ensemble}
+\label{table:ensemble_summary}
+\centering
+\begin{tabular}{l | l l l }
+Tipo & Performance  \\
+\hline
+LDA & 94.14 \\
+SVM polinómico & 96.14 \\
+K-nn & 94.99 \\
+\hline
+\textbf{Ensemble} & \textbf{97.78} \\
+\end{tabular}
+\end{table}
+
+La performance del ensamble es de un 97.78\%, superior a todos los
+clasificadores individuales. Es importante aclarar
+que esta es la única medición que no es crossvalidada, sino que el 
+procedimiento es separando una muestra de un 20\% para testing y
+entrenando nuevamente los 3 clasificadores del ensamble con el 80\%
+de entrenamiento.
+
+Se ha intentado mejorar la performance usando mas clasificadores de
+máquinas vector soporte o K vecinos mas cercanos, obteniendo los
+mismos resultados. Es por esto que se escoge usar el ensemble
+como clasificador del desafio planteado.
+
 
 \section{Conclusiones}
-
-bla bla
+Se ha logrado construir un ensemble de clasificadores capaz de identificar
+con un 97.78\% si 2 registros de ubicaciones pertenecen al mismo destino o no.
 
 
 
