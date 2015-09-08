@@ -44,7 +44,7 @@
 
 \title{  Nomao Challenge \\
 	{\large Trabajo Final de AID} \\
-	{\large Gabo}
+	{\large Maestria en Data Mining - año 2014}
 } 
 \author{Moncarz, Gabriel}
 \maketitle % this produces the title block
@@ -82,7 +82,7 @@ respuesta unificada. Una de las complejidades de devolver una
 respuesta unificada, radica en el proceso de deduplicacion de datos. Este
 proceso es el encargado de detectar si la información de 2 fuentes distintas
 son asociadas a un mismo lugar o no. Por ejemplo, la tabla \ref{table:example1}
-muestra los lugares que responden a la consulta "La poste" en francia. El
+muestra los lugares que responden a la consulta ``La poste'' en Francia. El
 proceso de deduplicación debe identificar que el sitio 2 y 3 se refieren
 al mismo lugar, pero el sitio 1 no.
 
@@ -119,7 +119,7 @@ Las instrucciones oficiales del desafio pueden leerse en
 \subsection{Sobre los datos provistos por Nomao}
 
 El conjunto de datos provisto por Nomao se encuentra en
-https://archive.ics.uci.edu/ml/datasets/Nomao. 
+\textit{https://archive.ics.uci.edu/ml/datasets/Nomao}. 
 
 Nomao no presenta los datos crudos como estan almacenados en la 
 base de datos ni como fueron ingresado por los usario, sino que  
@@ -136,35 +136,36 @@ ejemplo, cuando se ingresa una dirección manualmente, el usuario no tiene
 capacidad de ingresar la información de GPS.
 
 La tabla \ref{table:data_set} en el apendice \ref{appendix1} detalla todas las variables entregadas por 
-Nomao, como su tipo de datos. Todas las variables reales, van en el rango de 0 a 1. Las variables
+Nomao, como su tipo de datos. Todas las variables reales estan comprendidas
+en el rango de 0 a 1. Las variables
 categóricas pueden tener 3 posibles valores: \textit{'n'}, \textit{'s'} 
 o \textit{'m'}. Ni la organización del desafio ni Nomao especifícan 
 el significado de las variable del dataset ni de los valores
 que estas pueden tomar (no se sabe que significa 'n', 's' o 'm').
 
 
-\section{Métodos aplicados}
+\section{Materiales y métodos}
 
 El objetivo del Challenge es clasificar correctamente si 2 lugares
-referencian al mismo destino. Para lograr lo que básicamente se hace es:
+referencian al mismo destino. Para cumplir esto lo que básicamente se hace es:
 \begin{itemize}
 \item Análisis, limpieza y pre-procesamiento datos. 
 \item Un análisis de componentes principales para entender mayor el problema. 
-\item Análisis de discriminante lineal de Fisher.
-\item Análisis cuadratico de Fisher.
-\item Análisis de Maquinas de Vector Soporte (Support Vector Machine).
+\item Análisis de discriminante lineal de Fisher (LDA).
+\item Análisis cuadratico de Fisher (QDA).
+\item Análisis de Maquinas de Vector Soporte (Support Vector Machine - SVM).
 \item Ensamble con los mejores clasificadores.
 \end{itemize}
 
-Todos el procesamiento y análisis se hizo usando algoritmos en Python 3. Se
+Todo el procesamiento y análisis se hizo usando algoritmos propioes en Python 3. Se
 utilizaron como soporte las siguientes librerías:
 \begin{itemize}
-\item Pandas\footnote{http://pandas.pydata.org/}: Para usar la estructura de datos Data Frame
-\item NumPy\footnote{http://www.numpy.org/}: Para operaciones vectoriales
+\item Pandas\footnote{http://pandas.pydata.org/}: Para usar la estructura de datos Data Frame.
+\item NumPy\footnote{http://www.numpy.org/}: Para operaciones vectoriales.
 \item Scikit Learn\footnote{http://scikit-learn.org/}: Implementaciones de Análisis discriminante lineal
 	y cuadrático de Fisher, Maquinas de Vector Soporte y Análisis
-	de componentes principales
-\item Matplotlib: Herramienta de graficación en Python
+	de componentes principales.
+\item Matplotlib: Herramienta de graficación en Python.
 \end{itemize}
 
 Todo los códigos fuentes se encuentran en el siguiente repositorio
@@ -189,12 +190,12 @@ teórica de por que se escoge el valor -1, pero los clasificadores
 respondieron efectivamente a este valor.
 
 \subsection{Análisis de Componentes Principales}
-Se corre un análisis de Componentes principales. Se puede correr sobre
+Se corre un análisis de componentes principales. Se puede correr sobre
 todas las variables categóricas ya que estas se convirtieron en 
 variables dummies.
 
 \subsection{Cross Validation}
-Los métodos que se corren en las sección seguientes pueden tener overfitting. Para
+Los métodos que se corren en las secciones siguientes pueden tener overfitting. Para
 tener resultados precisos evitando lo más posible el overfitting, todos los
 métodos que se corren y se detallan en las secciones posteriores se realizan
 aplicando Cross Validation de 5 folders.
@@ -218,7 +219,7 @@ A su vez, la eficacia en la clasificación de cada kernel depende de los
 parámetros en que el clasificador es entrenado. Estos son valores empíricos
 que dependen exclusivamente de cada problema en particular. Es por eso
 que corren varios entrenamientos con distintos kernels y distintos parámetros.
-La table \ref{table:svm_config} especifica todas las variaciones de maquinas 
+La tabla \ref{table:svm_config} especifica todas las variaciones de maquinas 
 de vector soporte corridas.
 
 \begin{table}[ht!]
@@ -353,14 +354,14 @@ La tabla \ref{table:main_results} muestra la efectividad en la clasificacion
 y los tiempos de ejecución de cada uno de los algoritmos descriptos en
 la sección de \textit{Materiales}
 
-El ensamble tiene una performance del 97.77\%.
+El ensamble tiene una performance del 97.78\%.
 
 \begin{table}[!hb]
 \caption{Performance crossvalidada de todos los clasificadores}
 \label{table:main_results}
 \centering
 \begin{tabular}{l | l l l | l l}
-Id	&	Clasificador	&	Degree	&    $\gamma$	&	Tiempo	&	Performance \\
+	Id	&	Clasificador	&	Degree	&    $\gamma$	& Tiempo [s]  &	Performance \\
 	&			&		&		&	CrossVal.	&	CrossVal. \\
 \hline
 	1	&	LDA	&		&		&	12	&	\textbf{94.14} \\
@@ -443,10 +444,10 @@ el 99\% de la varianza.
 
 Los graficos de la figura \ref{fig:pca_scatterplot} muestran 3 scratterplot de
 las 3 primeras componentes principales. Los graficos de la componente principal 1 
-contra la componente 2 y 3, muestran que no se puede identificar la clases, ya
+contra la componente 2 y 3, muestran que no se pueden identificar las clases, ya
 que ambas estan distribuidas por todo el gráfico. En el gráfico de la
 componente principal 2 y la 3 ya se puede ver que las clases que apuntan
-a \textit{"distintos destinos"}, se encuentran más agrupadas que en las componentes
+a \textit{``distintos destinos''}, se encuentran más agrupadas que en las componentes
 previas. Sin embargo, pese al mayor poder de agrupamiento, estan muy juntas a
 las instancias de la clase contraria, haciendo imposible una clara identificación por
 componentes principales.
@@ -457,7 +458,6 @@ de diferentes tipos, que tengan una buen desempeño encontrando las clases:
 instancias que apuntan al mismo lugar y las que no. El objetivo final es apalancar
 el desempeño de estos clasificadores individuales haciendo un ensamble
 de los mejores de estos. 
-
 Para esto se prueba distintos tipos de clasificadores con distintos parámetros.
 Se prueba con discriminantes lineal de Fisher, discriminante cuadrático,
 máquinas de vector soporte y K vecinos mas cercanos. Se intenta en primera 
@@ -468,7 +468,7 @@ Se aclara que todas las mediciones de performance en esta
 sección son aplicando cross-validation, a excepción de que se mencione lo
 contrario.
 
-\subsubsection{Análisis discriminante lineal y cuadrático de Fisher}
+\subsection{Análisis discriminante lineal y cuadrático de Fisher}
 El análisis de discriminantes lineal y cuadrático son los únicos de los probados
 que no requieren una combinación de parámetros para escoger el mejor. El
 clasificador por discriminantes de Fisher lineal pudo diferenciar correctamente
@@ -480,12 +480,12 @@ Dado estos resultados, se opta por seleccional el clasificar lineal de Fisher
 para ser usado en el ensamble.
 
 \subsection{Máquinas de vector soporte}
-Las máquinas de vector soporte son buenas clasificadoras, permiten
-clasificar datos no lineales, en algunos casos tienen muy buena perforance,
-pero como contrapartida, son costosas de entrenar: consumen mucha  memoria y
+Las máquinas de vector soporte son buenas clasificadoras para algunos problemas complejos, permiten
+clasificar datos no lineales y en algunos casos tienen una perforance superior a la media.
+Como contrapartida, son costosas de entrenar: consumen mucha  memoria y
 demandan muchas operaciones de CPU, y además hay que encontrar
 los parámetros empíricos que mejor se ajustan a los datos.  
-Se intenta escoger el mejor modelo de Maquinas de vector soporte. Se
+Se intenta escoger el mejor modelo de maquinas de vector soporte. Se
 decide probar con 4 kernels distintos y combinar parámetros sobre
 cáda uno de ellos, para escoger finalmente un modelo para formar parte
 del ensamble definitivo. Se prueban 4 kerners: lineal, RBF, polinómico y
@@ -513,14 +513,14 @@ Respecto al kernel sigmoide, solo se obtiene buenos resultados con $\gamma$ igua
 a 0.001 y 0.0001. Para los distintos $\gamma$, la performance era del orden del
 70\%.
 
-Tras evaluar todos 43 modelos distintos de máquians de vector soporte, se escoge
+Tras evaluar los 43 modelos distintos de máquians de vector soporte, se escoge
 la de kernel polinómico de grado 3 y $\gamma=0.1$ porque tiene una performance del
 96.14\%, siendo esta la mejor de todas.
 
 \subsection{K vecinos mas cercanos}
 Se realizan corridas de K vecinos más cercanos, iterando con K desde
 3 a 20 y distancia de Minkowski. En todos los casos se clasificaron
-correctamente entre el 93\% y 95\%. Los tiempos de corrida aumentaron
+correctamente entre el 93\% y 95\% de las instacias. Los tiempos de corrida aumentaron
 a medida que K aumentaba, pero siempre estos tiempos son sensiblemente
 mas bajos que los de máquinas de vector soporte.
 
@@ -562,12 +562,13 @@ de entrenamiento.
 Se ha intentado mejorar la performance usando mas clasificadores de
 máquinas vector soporte o K vecinos mas cercanos, obteniendo los
 mismos resultados. Es por esto que se escoge usar el ensemble
-como clasificador del desafio planteado.
+mas simple como clasificador del desafio planteado.
 
 
 \section{Conclusiones}
 Se ha logrado construir un ensemble de clasificadores capaz de identificar
-con un 97.78\% si 2 registros de ubicaciones pertenecen al mismo destino o no.
+con un 97.78\% si 2 registros de ubicaciones pertenecen al mismo destino o no,
+usando los datos transformados y provistos por el motor de busqueda de Nomao.
 
 
 
