@@ -50,13 +50,13 @@
 
 
 \begin{abstract}
-Nomao es un motor de busqueda de lugares, donde la gente utiliza diferentes medios
+Nomao es un motor de búsqueda de lugares, donde la gente utiliza diferentes medios
 de comunicación (celulares, tablets, computadoras portatiles, etc) 
 para guardar información de distintos destinos (restaurants, hoteles,
 bares, etc). Cada medio tiene sus peculiaridades y muchas veces el mismo lugar
 es almacenado con datos distintos, similares o equivalentes (por ejemplo, ``av.'' o
-``avenida'' o ``Avenue''), como también con datos erroneos o faltantes. 
-El Desafio Nomao consiste en identificar si los datos pertenecientes
+``avenida'' o ``Avenue''), como también con datos erróneos o faltantes. 
+El Desafío Nomao consiste en identificar si los datos pertenecientes
 a 2 destinos geográficos se refieren al mismo lugar o no. El presente
 trabajo hace un análisis de distintos clasificadores, para terminar
 proponiendo un ensamble con una capacidad predictiva superior al 98\%.
@@ -65,7 +65,7 @@ proponiendo un ensamble con una capacidad predictiva superior al 98\%.
 \begin{IEEEkeywords}
 clasificador supervisado data mining maquinas vector soporte
 discriminante Fisher vecinos cercano random forest
-regresión logistica
+regresión logística
 \end{IEEEkeywords}
 
 
@@ -79,11 +79,11 @@ Ambos trabajos son desarrollados por el mismo autor.
 \subsection{Sobre ALRA/Nomao Challenge}
 Nomao Challenge fue una competencia de Data Mining organizada por ALRA 
 (Active Learning in Real-World Applications) y Nomao en el año 2012. Nomao 
-\footnote{www.nomao.com} es un motor de busquedas de lugares, que colecta
+\footnote{www.nomao.com} es un motor de búsquedas de lugares, que colecta
 información de lugares de diferentes fuentes (web, celulares, tablets, gps, 
 etc). Esta información es almacenada en una base de datos interna. 
-Cuando se realiza una consulta al motor de busqueda, éste debe retornar una
-respuesta unificada. Una de las complejidades en devolver una
+Cuando se realiza una consulta al motor de búsqueda, éste debe retornar una
+respuesta unificada. Una de las complejidades en devolver esta
 respuesta unificada, radica en el proceso de deduplicacion de datos. Este
 proceso es el encargado de detectar si la información de 2 fuentes distintas
 es asociada a un mismo lugar o no. Por ejemplo, la tabla \ref{table:example1}
@@ -96,7 +96,7 @@ al mismo lugar, pero el sitio 1 no.
 \label{table:example1}
 \centering
 \begin{tabular}{l | l l l }
-ID & Nombre & Direccion & Telefono  \\
+ID & Nombre & Dirección & Teléfono  \\
 \hline
 1 & La poste & 13 Rue De La Clef 59000 Lille France & 3631 \\ 
 2 & La poste & 13 Rue Nationale 59000 Lille France & 3631 \\
@@ -106,19 +106,19 @@ ID & Nombre & Direccion & Telefono  \\
 
 Cada lugar provisto por un usuario es almacenado internamente. Se guarda
 información sobre el nombre, dirección, geolocalizacion, página web,
-telefono, fax, etc. Uno de los inconvenientes es que como los datos
+teléfono, fax, etc. Uno de los inconvenientes es que como los datos
 provienen de fuentes distintas o a veces son tipeados manualmente,
 lugares iguales pueden tener información distinta, como también
 distintos lugares pueden tener algunos campos iguales, como por 
 ejemplo el nombre.
 
-El objetivo del desafio Nomao Challenge 2012 es utilizar 
+El objetivo del desafío Nomao Challenge 2012 es utilizar 
 algoritmos de aprendizaje automático para identificar si 
-distintos items con datos de lugares, se refieren al mismo
+distintos ítem con datos de lugares, se refieren al mismo
 lugar o no, teniendo en cuenta que estas instancias
 pueden provenir de fuentes diferentes.
 
-Las instrucciones oficiales del desafio pueden leerse en 
+Las instrucciones oficiales del desafío pueden leerse en 
 \textit{http://fr.nomao.com/labs/challenge}.
 
 \subsection{Sobre los datos provistos por Nomao}
@@ -127,11 +127,11 @@ El conjunto de datos provisto por Nomao se encuentra en
 \textit{https://archive.ics.uci.edu/ml/datasets/Nomao}. 
 
 Nomao no presenta los datos crudos como estan almacenados en la 
-base de datos ni como fueron ingresado por los usario, \textbf{sino que  
+base de datos ni como fueron ingresado por los usuario, \textbf{sino que  
 cada instancia representa una comparación de 
 2 lugares}. Los datos originales son transformados por Nomao y representados
 en 118 variables, de las cuales 89 son continuas y 29 son
-nominales. Ademas se entrega una variable adicional de identificación (id) y
+nominales. Además se entrega una variable adicional de identificación (id) y
 otra con la clase, que identifica si ambos lugares referencian a un mismo
 destino o no. 
 
@@ -140,11 +140,11 @@ Los datos faltantes se debe a las limitaciones de cada fuente de datos. Por
 ejemplo, cuando se ingresa una dirección manualmente, el usuario no tiene
 capacidad de ingresar la información de GPS.
 
-La tabla \ref{table:data_set} en el apendice \ref{appendix1} detalla todas las variables entregadas por 
+La tabla \ref{table:data_set} en el apéndice \ref{appendix1} detalla todas las variables entregadas por 
 Nomao, como también su tipo de datos. Todas las variables reales estan comprendidas
 en el rango de 0 a 1 inclusive. Las variables
 categóricas pueden tener 3 posibles valores: \textit{'n'}, \textit{'s'} 
-o \textit{'m'}. Ni la organización del desafio ni Nomao especifícan 
+o \textit{'m'}. Ni la organización del desafío ni Nomao especifican 
 el significado de las variable del dataset ni de los valores
 que estas pueden tomar (no se sabe que significa 'n', 's' o 'm').
 
@@ -156,9 +156,9 @@ referencian al mismo destino. Para cumplir esto lo que básicamente se hace es:
 \begin{itemize}
 \item Análisis, limpieza y pre-procesamiento datos. 
 \item Un análisis de componentes principales para mayor comprensión del problema. 
-\item Clasificador por analisis discriminante lineal de Fisher (LDA).
+\item Clasificador por análisis discriminante lineal de Fisher (LDA).
 \item Clasificador de maquinas de vector soporte (Support Vector Machine - SVM).
-\item Clasificador por regresión logistica.
+\item Clasificador por regresión logística.
 \item Clasificador por random forest.
 \item Ensamble con los mejores clasificadores.
 \end{itemize}
@@ -168,15 +168,15 @@ utilizaron como soporte las siguientes librerías:
 \begin{itemize}
 \item Pandas\footnote{http://pandas.pydata.org/}: Para usar la estructura de datos Data Frame.
 \item NumPy\footnote{http://www.numpy.org/}: Para operaciones vectoriales.
-\item Scikit Learn\footnote{http://scikit-learn.org/}: Implementaciones de Análisis 
-	discriminante lineal, maquinas de vector soporte y análisis
-	de componentes principales, random forest y regresión logistica.
+\item Scikit Learn\footnote{http://scikit-learn.org/}: Implementaciones del análisis 
+	de discriminante lineal, maquinas de vector soportem análisis
+	de componentes principales, random forest y regresión logística.
 \item Matplotlib: Herramienta de graficación en Python.
 \end{itemize}
 
 Todo los códigos fuentes como el trabajo base de AID,
-se encuentran en el siguiente repositorio: 
-\textit{GitHub: https://github.com/gmoncarz/nomao-challenge}
+se encuentran en el siguiente repositorio público GitHub: 
+\textit{https://github.com/gmoncarz/nomao-challenge}
 
 \subsection{Análisis de datos, Limpieza y pre-procesamiento}
 El dataset no presenta outliers. Esto se debe a que todas las variables continuas estan
@@ -187,7 +187,7 @@ instancia de datos.
 Las variables categóricas también respetan el standard: no hay ninguna
 de estas variable que contenga un valor no especificado. Estas 
 variable se convirtieron en variables dummies, con el objetivo 
-por aplicar métodos que requieran variables númericas.
+por aplicar métodos que requieran variables numéricas.
 
 Todas las variables continuas, excepto las que comienzan con el
 nombre \textit{clean\_name}, tienen datos faltantes. Como el rango
@@ -214,7 +214,7 @@ tiene parámetros especiales a configurar.
 \subsection{Maquinas de vector soporte}
 Las máquinas de vector soporte pueden discriminar instancias con distintos
 tipos de kernel, dependiendo de la naturaleza de los datos de entradas. Como
-la naturaleza de los datos es desconocido, y parte del desafio es identificarla,
+la naturaleza de los datos es desconocido, y parte del desafío es identificarla,
 en este trabajo se realiza un análisis de 3 kernels : lineal,
 polinómico y sigmoide.
 
@@ -275,8 +275,8 @@ Número & Kernel & $\gamma$ & Degree  \\
 Se realiza 18 iteraciones de K-Vecinos mas cercanos, iterando entre k=3
 a k=20. Se utiliza la distancia de Minkowski.
 
-\subsection{Regresion logistica}
-Se realiza una regresion logistica sobre todas las variables, sin penalización,
+\subsection{Regresion logística}
+Se realiza una regresión logística sobre todas las variables, sin penalización,
 sin balanceo de clases y sin límite de iteraciones.
 
 \subsection{Random Forest}
@@ -294,14 +294,14 @@ clasificadores corridos previamente:
 \item K Vecinos mas cercanos con K=3
 \end{itemize}
 
-A diferencia de los metodos previos, este método no se aplica
+A diferencia de los métodos previos, este método no se aplica
 cross validation, sino que se separa un 80\% aleatorio del dataset para 
 entrenamiento, se entrenan los 3 modelos con este conjunto, y luego
 se verifica la performance del ensamble con el 20\% restante.
 
 \subsection{Ensamble de 5 clasificadores}
-Este método es una extensión del ensemble anterior, agregandole
-2 clasificadores: regresion logística y random forest.
+Este método es una extensión del ensemble anterior, agregándole
+2 clasificadores: regresión logística y random forest.
 
 \section{Resultados}
 
@@ -359,7 +359,7 @@ Componente & Var acumulada.  \\
 \end{figure}
 
 
-La tabla \ref{table:main_results} muestra la efectividad en la clasificacion
+La tabla \ref{table:main_results} muestra la efectividad en la clasificación
 y los tiempos de ejecución de cada uno de los algoritmos descriptos en
 la sección de \textit{Materiales}
 
@@ -432,9 +432,9 @@ de 5 clasificadores del 98.07\%.
 	54	&	K-nn	&	19	&		&	79	&	93.86 \\
 	55	&	K-nn	&	20	&		&	75	&	93.78 \\
 \hline
-	56	& Regresion Log. &		&		&	11      &       94.73 \\
+	56	& Regresión Log. &		&		&	11      &  \textbf{94.73} \\
 \hline
-	57	& Random forest	&		&		&	16	&	96.89 \\
+	57	& Random forest	&		&		&	16	&  \textbf{96.89} \\
 \hline
 	58	&  ensemble de &	  	&		&		&	97.78 \\
 		&  3 clasificadores &		&		&		&	      \\
@@ -454,8 +454,8 @@ de la varianza puede ser explicada con 17 componentes de las 118 variables
 totales del dataset. Con 30 componentes principales, se puede explicar
 el 99\% de la varianza.
 
-Los graficos de la figura \ref{fig:pca_scatterplot} muestran 3 scratterplot de
-las 3 primeras componentes principales. Los graficos de la componente principal 1 
+Los gráficos de la figura \ref{fig:pca_scatterplot} muestran 3 scratterplot de
+las 3 primeras componentes principales. Los gráficos de la componente principal 1 
 contra la componente 2 y 3, muestran que no se pueden identificar las clases, ya
 que ambas estan distribuidas por todo el gráfico. En el gráfico de la
 componente principal 2 y la 3 ya se puede ver que las clases que apuntan
@@ -470,9 +470,9 @@ de diferentes tipos, que tengan una buen desempeño encontrando las clases:
 instancias que apuntan al mismo lugar y las que no. El objetivo final es apalancar
 el desempeño de estos clasificadores individuales haciendo un ensamble
 de los mejores de estos. 
-Para esto se prueba distintos tipos de clasificadores con distintos parámetros.
+Para esto se prueba clasificadores de diversas especies con distintos parámetros.
 Se prueba con discriminantes lineal de Fisher, 
-máquinas de vector soporte, K vecinos mas cercanos, regresion logística
+máquinas de vector soporte, K vecinos mas cercanos, regresión logística
 y random forest. Se intenta en primera 
 instancia encontrar el mejor clasificador de cada tipo. Luego, se verifica si
 haciendo un ensamble de los mejores, la performance general es aún mejor.
@@ -495,14 +495,14 @@ demandan muchas operaciones de CPU, y además hay que encontrar
 los parámetros empíricos que mejor se ajustan a los datos.  
 Se intenta escoger el mejor modelo de maquinas de vector soporte. Se
 decide probar con 3 kernels distintos y combinar parámetros sobre
-cáda uno de ellos, para escoger finalmente un modelo para formar parte
+cada uno de ellos, para escoger finalmente un modelo para formar parte
 del ensamble definitivo. Se prueban los kerners: lineal, polinómico y
 sigmoide. El modelo lineal, el más estandard de todos y usado como referencia,
 puede clasificar correctamente el 94.82\% de los datos. 
-Se prueba los kernels polinómicos de $2^{do}$, $3^{ero}$, $4^{to}$ y $5^{to}$ orden. A cada
+Se prueban los kernels polinómicos de $2^{do}$, $3^{ero}$, $4^{to}$ y $5^{to}$ orden. A cada
 uno de ellos se los corre con varios valores de $\gamma$ (entre 1 y $10^{-5}$) . Los modelos
 con buen desempeño tienen una performance que oscilan entre el 92 y
-96\%. Para todos los grados el mejor $\gamma$ es de 0.1, excepto para el polinómio
+96\%. Para todos los grados el mejor $\gamma$ es de 0.1, excepto para el polinómico
 de $5^{to}$ orden, cuyo mejor $\gamma$ es de 0.01. 
 
 Si se considera el mejor $\gamma$ de cada kernel polinómico, todos los modelos tienen un
@@ -510,11 +510,11 @@ desempeño de entre el 95\% y 96\%.
 
 Respecto a los tiempos de ejecución, estos crecen sensiblemente a medida que el $\gamma$ 
 disminuye. Esto se debe a que mientras menor sea el $\gamma$, mayor es la precisión que 
-se le exige al modelo y mas calculos aritméticos hay que realizar para encontrar
+se le exige al modelo y mas cálculos aritméticos hay que realizar para encontrar
 el polinomio discriminante. 
 
 Respecto al kernel sigmoide, solo se obtiene buenos resultados con $\gamma=0.001$
-y $\gamma=0.0001$. Para los demas $\gamma$, la performance era del orden del
+y $\gamma=0.0001$. Para los demás $\gamma$, la performance era del orden del
 70\%.
 
 Tras evaluar los 36 modelos distintos de máquinas de vector soporte, se escoge
@@ -524,19 +524,19 @@ el del kernel polinómico de grado 3 y $\gamma=0.1$ porque tiene una performance
 \subsection{K vecinos mas cercanos}
 Se realizan corridas de K vecinos más cercanos, iterando con K desde
 3 a 20 y distancia de Minkowski. En todos los casos se clasificaron
-correctamente entre el 93\% y 95\% de las instacias. Los tiempos de corrida aumentaron
+correctamente entre el 93\% y 95\% de las instancias. Los tiempos de corrida aumentaron
 a medida que K aumentaba, pero siempre estos tiempos son sensiblemente
 mas bajos que los de máquinas de vector soporte.
 
 Lo curioso de este clasificador es que para este problema puntual, a medida
-que aumenta el K, dispinuye la capacidad de predicción. De cualquier modo,
+que aumenta el K, disminuye la capacidad de predicción. De cualquier modo,
 se debe tener en cuenta que esta diferencia no es mayor a 1.20\%.
 
 Se escoge el clasificador con K=3 para ser usado en el ensemble final,
 porque su performance del 94.99\% es la mayor de esta especie.
 
 \subsection{Regresión logística}
-La regresión logistica que no descarta ninguna variable tiene 
+La regresión logística que no descarta ninguna variable tiene 
 una capacidad predictiva del 94.73\%, equivalente a la del
 discriminante lineal de Fisher.
 
@@ -546,7 +546,7 @@ CART. La performance de este algortimo es del 96.89\%,
 siendo el algoritmo de mayor poder de discriminación  individual. 
 
 Hay que destacar que random forest no solo supero en capacidad preditiva
-al mejor SVM, sino que el tiempo de corrida fue sensiblemente superior.
+al mejor SVM, sino que en tiempo de corrida fue ampliamente superior:
 Random Forest fue entrenado en 16 segundos, mientras que SVN requirió
 196. De todas formas, se debe tener en cuenta que el nivel de
 concurrencia de random forest es superior al de SVM.
@@ -597,8 +597,8 @@ mismos resultados.
 
 \section{Conclusiones}
 Se ha logrado construir un ensemble de clasificadores capaz de identificar
-con un 98.07\% si 2 registros de ubicaciones pertenecen al mismo destino o no,
-usando los datos transformados y provistos por el motor de busqueda de Nomao.
+con un 98.07\% de precisión si 2 registros de ubicaciones pertenecen al mismo destino o no,
+usando los datos transformados y provistos por el motor de búsqueda de Nomao.
 
 
 
