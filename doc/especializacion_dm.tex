@@ -14,6 +14,7 @@
 \usepackage{tikz}
 \usepackage{amsmath}
 \usepackage{gensymb}
+\usepackage{makeidx}
 
 
 
@@ -71,6 +72,7 @@ discriminante Fisher vecinos cercano random forest
 regresión logística
 \end{IEEEkeywords}
 
+\tableofcontents
 
 \section{Introducción}
 
@@ -123,13 +125,13 @@ Los atributos de lugares  provisto por los usuario son almacenados internamente.
 Se guarda información sobre el nombre, dirección, geolocalizacion, página web,
 teléfono, fax, etc. Uno de los inconvenientes es que como estos datos
 provienen de fuentes distintas (inclusive a veces son tipeados manualmente),
-2 lugares iguales pueden tener atributos distintos, como también
+dos lugares iguales pueden tener atributos distintos, como también
 distintos lugares pueden tener algunos atributos iguales, como por 
 ejemplo el nombre.
 
 El objetivo del desafío Nomao Challenge 2012 es utilizar 
 algoritmos de aprendizaje automático para identificar si 
-2 conjuntos con atributos de lugares distintos, se refieren al mismo
+dos conjuntos con atributos de lugares distintos, se refieren al mismo
 lugar o no, teniendo en cuenta que los atributos 
 pueden provenir de fuentes diferentes.
 
@@ -172,7 +174,7 @@ instancias referencian a un mismo lugar o no.
 El objetivo del Challenge es clasificar correctamente si 2 conjuntos 
 de atributos de lugares referencian al mismo lugar. Para cumplir esto lo que básicamente se hace es:
 \begin{itemize}
-\item Análisis, y pre-procesamiento datos. 
+\item Análisis y pre-procesamiento datos. 
 \item Un análisis de componentes principales para mayor comprensión del problema. 
 \item Clasificador por análisis discriminante lineal de Fisher (LDA).
 \item Clasificador de maquinas de vector soporte (Support Vector Machine - SVM).
