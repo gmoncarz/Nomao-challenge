@@ -47,7 +47,7 @@
 	{\large Trabajo Integrador de Especialización en Data Mining - año 2014} \\
 } 
 \author{Moncarz, Gabriel} 
-\specialpapernotice{Revisor: Soria, Marcelo}
+\specialpapernotice{Supervisor: Soria, Marcelo}
 \maketitle % this produces the title block
 
 
@@ -55,12 +55,12 @@
 Nomao es un motor de búsqueda de lugares, donde la gente utiliza diferentes medios
 de comunicación (celulares, tablets, computadoras portatiles, etc) 
 para guardar información de distintos destinos (restaurants, hoteles,
-bares, etc). Cada medio tiene sus características particulares y 
+bares, etc). Cada dispositivo tiene diferentes características y 
 en ocaciones el mismo lugar
 es almacenado con datos distintos, similares o equivalentes (por ejemplo, ``av.'' o
 ``avenida'' o ``Avenue''), como también con datos erróneos o faltantes. 
 El Desafío Nomao consiste en identificar si los datos pertenecientes
-a 2 destinos geográficos se refieren al mismo lugar o no. El presente
+a dos destinos geográficos se refieren al mismo lugar o no. El presente
 trabajo hace un análisis de distintos clasificadores, para terminar
 proponiendo un ensamble con una capacidad predictiva superior al 98\%.
 \end{abstract}
@@ -162,7 +162,8 @@ capacidad de ingresar la información de GPS.
 
 Los datos originales son transformados por Nomao y representados
 en 118 variables, de las cuales 89 son continuas y 29 son
-nominales. Además se entrega una variable adicional de identificación (id) y
+nominales. Además se entrega una variable adicional de identificación 
+(id del registro) y
 otra con la clase, que identifica si los atributos de ambas 
 instancias referencian a un mismo lugar o no. 
 
@@ -214,9 +215,15 @@ teórica de por que se escoge el valor -1, pero los clasificadores
 respondieron efectivamente a este valor.
 
 \subsection{Análisis de Componentes Principales}
-Se corre un análisis de componentes principales. Se recuerda que las 
+Se corre un análisis de componentes principales usando la clase
+\textit{PCA} de la librería \textit{sklearn.decomposition}
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.decomposition
+.PCA.html}. 
+
+Se recuerda que las 
 variables categóricas son eliminadas del dataset como tales, y se las
 reemplaza por variables dummies.
+
 
 \subsection{Validación Cruzada}
 Los métodos que se corren en las secciones siguientes pueden tener overfitting. Para
@@ -224,9 +231,16 @@ tener resultados precisos evitando lo más posible el sobreentrenamiento, todos 
 métodos que se corren y se detallan en las secciones posteriores se realizan
 aplicando validación cruzada de 5 folders.
 
+Se usa la implementación de la función \textit{cross\_val\_score}, de la librería
+\textit{sklearn.cross\_validation}
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.
+cross\_validation.cross\_val\_score.html}
+
 \subsection{Análisis Discriminante Lineal}
-Se corre un análisis de discriminante lineal de Fisher. Este proceso no 
-tiene parámetros especiales a configurar.
+Se corre un análisis de discriminante lineal de Fisher, implementado por la clase
+\textit{LDA} de la librería \textit{sklearn.lda}
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.lda.LDA.html}. Este proceso no 
+tiene parámetros especiales a configurar. 
 
 \subsection{Maquinas de vector soporte}
 Las máquinas de vector soporte pueden discriminar instancias con distintos
@@ -241,6 +255,10 @@ que dependen exclusivamente de cada problema en particular. Es por eso
 que se corren varios entrenamientos con distintos kernels y distintos parámetros.
 La tabla \ref{table:svm_config} especifica todas las variaciones de maquinas 
 de vector soporte corridas.
+
+Se ejecuta la implementación de la clase \textit{SVC} de la librería 
+\textit{sklearn.svm}
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}
 
 \begin{table}[ht!]
 \caption{Distintas configuraciones de SVM ejecutadas}
@@ -292,14 +310,26 @@ Número & Kernel & $\gamma$ & Grado  \\
 Se realiza 18 iteraciones de K-Vecinos mas cercanos, iterando entre k=3
 a k=20. Se utiliza la distancia de Minkowski.
 
+Se utiliza la clase \textit{KNeighborsClassifier} de la librería
+\textit{sklearn.neighbors}\footnote
+{http://scikit-learn.org/stable/modules/generated/sklearn.neighbors
+.KNeighborsClassifier.html}
+
 \subsection{Regresion logística}
 Se realiza una regresión logística sobre todas las variables, sin penalización,
-sin balanceo de clases y sin límite de iteraciones.
+sin balanceo de clases y sin límite de iteraciones. Se utiliza la
+implementación de la clase \textit{LogisticRegression} de la librería
+\textit{sklearn.linear\_model}
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.
+linear\_model.LogisticRegression.html}
 
 \subsection{Random Forest}
 Se realizan corridas de Random Forest de 100 arboles CART, con una 
 profundidad máxima de 50 hojas, un mínimo de 2 instancias para abrir
-un nodo y sin límite máximo de nodos por hoja.
+un nodo y sin límite máximo de nodos por hoja. Se utiliza la clase
+\textit{RandomForestClassifier} de la librería \textit{sklearn.ensemble}
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.Random
+ForestClassifier.html}
 
 \subsection{Ensamble de 3 clasificadores}
 Este método realiza un ensamble por votación de los siguientes 3
@@ -635,7 +665,9 @@ en Data Mining.
 
 \section{Especificación de los datos provistos por Nomao}
 \label{appendix1}
-Todas las variables categóricas pueden tener 3 valores posibles:
+La tabla \ref{table:data_set} lista todas las variables provistas por la
+organización como su tipo. Todas las variables 
+categóricas pueden tener 3 valores posibles:
 \textit{'n'}, \textit{'s'} o \textit{'m'}.
 Todas las variables continuas son reales con valores entre 
 0 y 1. Las variables continuas pueden tener valores faltantes.
@@ -779,6 +811,31 @@ Numero & Nombre & Tipo & Rango \\
 \end{tabular}
 \end{table}
 
+\section{Referencias}
+\label{appendix2}
+[1] Jolliffe, I. T. (1986). Principal Component Analysis. Springer-Verlag.
+
+[2]Mosteller F. and Tukey J.W. Data analysis, including statistics. In Handbook of Social Psychology. Addison-Wesley, Reading, MA, 1968.
+
+[3]Geisser, Seymour (1993). Predictive Inference. New York, NY: Chapman and Hall. ISBN 0-412-03471-9.
+
+[4]Kohavi, Ron (1995). ``A study of cross-validation and bootstrap for accuracy estimation and model selection''. Proceedings of the Fourteenth International Joint Conference on Artificial Intelligence (San Mateo, CA: Morgan Kaufmann) 2 (12): 1137–1143. CiteSeerX: 10.1.1.48.529.
+
+[5] Devijver, Pierre A.; Kittler, Josef (1982). Pattern Recognition: A Statistical Approach. London, GB: Prentice-Hall.
+
+[6] Fisher, R. A. (1936). ``The Use of Multiple Measurements in Taxonomic Problems''. Annals of Eugenics 7 (2): 179–188. doi:10.1111/j.1469-1809.1936.tb02137.x. hdl:2440/15227.
+
+[7] McLachlan, G. J. (2004). Discriminant Analysis and Statistical Pattern Recognition. Wiley Interscience. ISBN 0-471-69115-1. MR 1190469.
+
+[8] Cortes, C.; Vapnik, V. (1995). ``Support-vector networks''. Machine Learning 20 (3): 273. doi:10.1007/BF00994018.
+
+[9] Altman, N. S. (1992). ``An introduction to kernel and nearest-neighbor nonparametric regression''. The American Statistician 46 (3): 175–185. doi:10.1080/00031305.1992.10475879
+
+[10]  Walker, SH; Duncan, DB (1967). ``Estimation of the probability of an event as a function of several independent variables''. Biometrika 54: 167–178.
+
+[11] Cox, DR (1958). ``The regression analysis of binary sequences (with discussion)''. J Roy Stat Soc B 20: 215–242.
+
+[12] Breiman, Leo (2001). ``Random Forests''. Machine Learning 45 (1): 5–32. doi:10.1023/A:1010933404324.
 
 
 \end{document}
