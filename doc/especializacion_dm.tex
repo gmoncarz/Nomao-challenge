@@ -57,7 +57,7 @@ Nomao es un motor de búsqueda de lugares, donde la gente utiliza diferentes med
 de comunicación (celulares, tablets, computadoras portatiles, etc) 
 para guardar información de distintos destinos (restaurants, hoteles,
 bares, etc). Cada dispositivo tiene diferentes características y 
-en ocaciones el mismo lugar
+en ocasiones el mismo lugar
 es almacenado con datos distintos, similares o equivalentes (por ejemplo, ``av.'' o
 ``avenida'' o ``Avenue''), como también con datos erróneos o faltantes. 
 El Desafío Nomao consiste en identificar si los datos pertenecientes
@@ -93,7 +93,7 @@ etc). Esta información es almacenada en una base de datos interna.
 Cuando se realiza una consulta al motor de búsqueda, éste debe retornar una
 respuesta unificada. Una de las complejidades
 radica en el proceso de deduplicacion de datos. Este
-proceso es el encargado de detectar si la información de 2 fuentes distintas
+proceso es el encargado de detectar si la información de dos fuentes distintas
 es asociada a un mismo lugar o no. Por ejemplo, la tabla \ref{table:example1}
 muestra las salidas que responden a la consulta ``La poste'' en Francia. El
 proceso de deduplicación debe identificar que el sitio 2 y 3 se refieren
@@ -112,7 +112,7 @@ ID & Nombre & Dirección & Teléfono  \\
 \end{tabular}
 \end{table}
 
-Con el propósito de clarificación se definen 2 conceptos básicos:
+Con el propósito de clarificación se definen dos conceptos básicos:
 un lugar y los atributos asociados a este. Un \textit{lugar} hace referencia
 a un sitio geográfico de interes, como puede ser un cine, teatro, bar, shopping, etc. 
 Por otro lado, los \textit{atributos de un lugar} hacer referencia al conjunto de datos que 
@@ -146,7 +146,7 @@ El conjunto de datos provisto por Nomao se encuentra en
 Nomao no presenta los datos crudos como estan almacenados en la 
 base de datos ni como fueron ingresado por los usuario, \textbf{sino que  
 cada instancia representa una comparación de 
-2 lugares}. 
+dos lugares}. 
 
 La tabla \ref{table:data_set} del apéndice \ref{appendix1} 
 detalla todas las variables entregadas por 
@@ -171,7 +171,7 @@ instancias referencian a un mismo lugar o no.
 
 \section{Materiales y métodos}
 
-El objetivo del Challenge es clasificar correctamente si 2 conjuntos 
+El objetivo del Challenge es clasificar correctamente si dos conjuntos 
 de atributos de lugares referencian al mismo lugar. Para cumplir esto lo que básicamente se hace es:
 \begin{itemize}
 \item Análisis y pre-procesamiento datos. 
@@ -327,7 +327,7 @@ linear\_model.LogisticRegression.html}
 
 \subsection{Random Forest}
 Se realizan corridas de Random Forest de 100 arboles CART, con una 
-profundidad máxima de 50 hojas, un mínimo de 2 instancias para abrir
+profundidad máxima de 50 hojas, un mínimo de dos instancias para abrir
 un nodo y sin límite máximo de nodos por hoja. Se utiliza la clase
 \textit{RandomForestClassifier} de la librería \textit{sklearn.ensemble}
 \footnote{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.Random
@@ -350,7 +350,7 @@ se verifica la performance del ensamble con el 20\% restante.
 
 \subsection{Ensamble de 5 clasificadores}
 Este método es una extensión del ensemble anterior, agregándole
-2 clasificadores: regresión logística y random forest.
+dos clasificadores: regresión logística y random forest.
 
 \section{Resultados}
 
@@ -652,7 +652,7 @@ mismos resultados.
 
 \section{Conclusiones}
 Se ha logrado construir un ensemble de clasificadores capaz de identificar
-con un 98.07\% de precisión si los atributos de lugares de 2 registros
+con un 98.07\% de precisión si los atributos de lugares de dos registros
 referencian al mismo lugar o no,
 usando los datos transformados y provistos por el motor de búsqueda de Nomao.
 
